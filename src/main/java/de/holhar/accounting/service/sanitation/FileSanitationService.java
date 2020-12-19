@@ -7,7 +7,6 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,14 +14,6 @@ import java.util.stream.Collectors;
 public class FileSanitationService implements SanitationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileSanitationService.class);
-
-    private final List<String> blackList = new ArrayList<>();
-
-    public FileSanitationService() {
-        blackList.add("Kon");
-        blackList.add("Von");
-        blackList.add("Bis");
-    }
 
     @Override
     public List<String> cleanUp(Path path) {
@@ -32,7 +23,6 @@ public class FileSanitationService implements SanitationService {
                     .filter(StringUtils::hasText)
                     .map(line -> line.replaceAll("\"", ""))
                     .map(line -> line.replaceAll("\\s\\s+", " "))
-                    .filter(line -> !blackList.contains(line.substring(0, 3)))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             LOGGER.error("Could not sanitize file under path '{}'", path);

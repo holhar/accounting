@@ -1,5 +1,6 @@
 package de.holhar.accounting.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Entry {
@@ -9,22 +10,22 @@ public class Entry {
     private final String bookingText;
     private final String client;
     private final String intendedUse;
-    private final String accoundId;
+    private final String accountId;
     private final String bankCode;
-    private final float amount;
+    private final BigDecimal amount;
     private final String creditorId;
     private final String clientReference;
     private final String customerReference;
 
     public Entry(LocalDate bookingDate, LocalDate valueDate, String bookingText, String client, String intendedUse,
-                 String accoundId, String bankCode, float amount, String creditorId, String clientReference,
+                 String accountId, String bankCode, BigDecimal amount, String creditorId, String clientReference,
                  String customerReference) {
         this.bookingDate = bookingDate;
         this.valueDate = valueDate;
         this.bookingText = bookingText;
         this.client = client;
         this.intendedUse = intendedUse;
-        this.accoundId = accoundId;
+        this.accountId = accountId;
         this.bankCode = bankCode;
         this.amount = amount;
         this.creditorId = creditorId;
@@ -52,15 +53,15 @@ public class Entry {
         return intendedUse;
     }
 
-    public String getAccoundId() {
-        return accoundId;
+    public String getAccountId() {
+        return accountId;
     }
 
     public String getBankCode() {
         return bankCode;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

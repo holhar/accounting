@@ -1,18 +1,19 @@
 package de.holhar.accounting.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Balance {
 
-    private final float value;
+    private final BigDecimal value;
     private final LocalDate date;
 
-    public Balance(float value, LocalDate date) {
+    public Balance(BigDecimal value, LocalDate date) {
         this.value = value;
         this.date = date;
     }
 
-    public float getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 

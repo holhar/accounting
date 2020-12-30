@@ -1,5 +1,7 @@
 package de.holhar.accounting.service;
 
+import de.holhar.accounting.service.deserialization.Deserializer;
+import de.holhar.accounting.service.sanitation.SanitationService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -17,7 +20,13 @@ public class AccountingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingService.class);
 
-    public AccountingService() throws IOException {
+    private final SanitationService sanitationService;
+    private final Deserializer accountStatementDeserializer;
+
+    public AccountingService(SanitationService sanitationService,
+                             Deserializer accountStatementDeserializer) throws IOException {
+        this.sanitationService = sanitationService;
+        this.accountStatementDeserializer = accountStatementDeserializer;
         read();
     }
 

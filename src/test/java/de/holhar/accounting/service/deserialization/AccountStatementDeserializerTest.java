@@ -1,10 +1,9 @@
 package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.domain.AccountStatement;
-import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.domain.CheckingAccountEntry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
@@ -40,7 +39,7 @@ class AccountStatementDeserializerTest {
         assertEquals(LocalDate.parse("2020-01-31"), accountStatement.getBalance().getDate());
         assertEquals(31, accountStatement.getEntries().size());
 
-        Entry firstEntry = accountStatement.getEntries().get(0);
+        CheckingAccountEntry firstEntry = (CheckingAccountEntry)accountStatement.getEntries().get(0);
         assertEquals(LocalDate.parse("2020-01-31"), firstEntry.getBookingDate());
         assertEquals(LocalDate.parse("2020-01-31"), firstEntry.getValueDate());
         assertEquals("Überweisung", firstEntry.getBookingText());
@@ -53,7 +52,7 @@ class AccountStatementDeserializerTest {
         assertTrue(firstEntry.getClientReference().isBlank());
         assertEquals("NOTPROVIDED", firstEntry.getCustomerReference());
 
-        Entry lastEntry = accountStatement.getEntries().get(30);
+        CheckingAccountEntry lastEntry = (CheckingAccountEntry)accountStatement.getEntries().get(30);
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getBookingDate());
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getValueDate());
         assertEquals("Lastschrift", lastEntry.getBookingText());

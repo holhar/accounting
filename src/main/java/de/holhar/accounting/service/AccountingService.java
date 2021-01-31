@@ -21,12 +21,12 @@ public class AccountingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingService.class);
 
     private final SanitationService sanitationService;
-    private final Deserializer accountStatementDeserializer;
+    private final Deserializer deserializer;
 
     public AccountingService(SanitationService sanitationService,
-                             Deserializer accountStatementDeserializer) throws IOException {
+                             Deserializer deserializer) throws IOException {
         this.sanitationService = sanitationService;
-        this.accountStatementDeserializer = accountStatementDeserializer;
+        this.deserializer = deserializer;
         read();
     }
 

@@ -19,7 +19,7 @@ class FileSanitationServiceTest {
     private SanitationService fileSanitationService;
 
     @Test
-    public void cleanUpSucceeds() throws IOException {
+    public void cleanUp_accountingStatement_Succeeds() throws IOException {
         // Given
         Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/acc_202001.csv");
 
@@ -28,6 +28,20 @@ class FileSanitationServiceTest {
 
         // Then
         Path processedFile = Paths.get("src/test/resources/accounting/sanitized/acc_202001.csv");
+        List<String> sanitizedLines = Files.readAllLines(processedFile);
+        assertEquals(sanitizedLines, resultLines);
+    }
+
+    @Test
+    public void cleanUp_creditCardStatement_Succeeds() throws IOException {
+        // Given
+        Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/cre_202001.csv");
+
+        // When
+        List<String> resultLines = fileSanitationService.cleanUp(unprocessedFile);
+
+        // Then
+        Path processedFile = Paths.get("src/test/resources/accounting/sanitized/cre_202001.csv");
         List<String> sanitizedLines = Files.readAllLines(processedFile);
         assertEquals(sanitizedLines, resultLines);
     }

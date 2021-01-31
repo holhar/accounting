@@ -1,25 +1,15 @@
 package de.holhar.accounting.service.deserialization;
 
-import de.holhar.accounting.domain.AccountIdTypeContainer;
-import de.holhar.accounting.domain.AccountStatement;
-import de.holhar.accounting.domain.Balance;
-import de.holhar.accounting.domain.Entry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.holhar.accounting.domain.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class AccountStatementDeserializer implements Deserializer {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatementDeserializer.class);
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+public class AccountStatementDeserializer extends AbstractStatementDeserializer implements Deserializer {
 
     @Override
     public AccountStatement readStatement(List<String> lines) {
@@ -55,13 +45,6 @@ public class AccountStatementDeserializer implements Deserializer {
         } else {
             return AccountStatement.Type.CREDIT_CARD;
         }
-    }
-
-    private LocalDate getDate(String dateLine, String s) {
-        List<String> fromLineList = Arrays.asList(dateLine.split(";"));
-        String fromStringValue = Optional.ofNullable(fromLineList.get(1))
-                .orElseThrow(() -> new IllegalArgumentException(s));
-        return LocalDate.parse(fromStringValue, formatter);
     }
 
     private Balance getBalance(ArrayDeque<String> lineQueue) {
@@ -105,7 +88,7 @@ public class AccountStatementDeserializer implements Deserializer {
         String creditorId = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String clientReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String customerReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
-        return new Entry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
+        return new CheckingAccountEntry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
                 new BigDecimal(amountString), creditorId, clientReference, customerReference);
     }
 }

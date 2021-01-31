@@ -25,7 +25,7 @@ public class FileSanitationService implements SanitationService {
                     .map(line -> line.replaceAll("\\s\\s+", " "))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            LOGGER.error("Could not sanitize file under path '{}'", path);
+            LOGGER.error("Could not sanitize file under path '{}'", path, e);
             return Collections.emptyList();
         }
     }

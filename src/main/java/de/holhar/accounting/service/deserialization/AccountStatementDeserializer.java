@@ -3,7 +3,6 @@ package de.holhar.accounting.service.deserialization;
 import de.holhar.accounting.domain.AccountIdTypeContainer;
 import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Balance;
-import de.holhar.accounting.domain.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,7 @@ public class AccountStatementDeserializer implements Deserializer {
 
         // Get rid of the table header
         lineQueue.pop();
-        List<Entry> entries = lineQueue.stream()
+        List<AccountStatement.Entry> entries = lineQueue.stream()
                 .map(this::getEntry)
                 .collect(Collectors.toList());
 
@@ -92,7 +91,7 @@ public class AccountStatementDeserializer implements Deserializer {
         }
     }
 
-    private Entry getEntry(String entryLine) {
+    private AccountStatement.Entry getEntry(String entryLine) {
         ArrayDeque<String> entryFields = new ArrayDeque<>(Arrays.asList(entryLine.split(";")));
         LocalDate bookingDate = LocalDate.parse(entryFields.pop(), formatter);
         LocalDate valueDate = LocalDate.parse(entryFields.pop(), formatter);
@@ -105,7 +104,7 @@ public class AccountStatementDeserializer implements Deserializer {
         String creditorId = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String clientReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String customerReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
-        return new Entry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
+        return new AccountStatement.Entry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
                 new BigDecimal(amountString), creditorId, clientReference, customerReference);
     }
 }

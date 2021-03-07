@@ -44,8 +44,8 @@ public class CreditCardStatementDeserializerTest {
         assertEquals(LocalDate.parse("2020-02-01"), firstEntry.getValueDate());
         assertEquals(LocalDate.parse("2020-01-30"), firstEntry.getReceiptDate());
         assertEquals("FOOBAR.COM 7899877898Somewhere", firstEntry.getDescription());
-        assertEquals(new BigDecimal("-1.99"), firstEntry.getAmount());
-        assertEquals(new BigDecimal("0"), firstEntry.getOriginalAmount());
+        assertEquals(new BigDecimal("-12.72"), firstEntry.getAmount());
+        assertEquals(new BigDecimal("-14.99"), firstEntry.getOriginalAmount());
 
         CreditCardEntry lastEntry = (CreditCardEntry)accountStatement.getEntries().get(32);
         assertTrue(lastEntry.isBilledAndNotIncluded());

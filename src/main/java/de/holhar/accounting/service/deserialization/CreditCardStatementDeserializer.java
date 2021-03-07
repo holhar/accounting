@@ -53,7 +53,11 @@ public class CreditCardStatementDeserializer extends AbstractStatementDeserializ
         String amountString = entryFields.pop().replace(".", "").replace(",", ".").trim();
         String originalAmountString = entryFields.isEmpty()
                 ? "0"
-                : entryFields.pop().replace(".", "").replace(",", ".").trim();
+                : entryFields.pop()
+                    .replace(".", "")
+                    .replace(",", ".")
+                    .replace("USD", "")
+                    .trim();
 
         return new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate, description,
                 new BigDecimal(amountString), new BigDecimal(originalAmountString));

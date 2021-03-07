@@ -1,6 +1,5 @@
 package de.holhar.accounting.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,12 @@ public class AccountStatement {
         this.to = to;
         this.balance = balance;
         this.entries = entries;
+    }
+
+    public String getFriendlyName() {
+        String month = "" + from.getMonthValue();
+        month = month.length() < 2 ? "0" + month : month;
+        return from.getYear() + "_" + month + "_" + type.name();
     }
 
     public String getId() {

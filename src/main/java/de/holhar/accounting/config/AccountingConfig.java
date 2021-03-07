@@ -17,8 +17,8 @@ public class AccountingConfig {
 
     @Bean
     public AccountingService accountingService(SanitationService fileSanitationService,
-                                               Deserializer accountStatementDeserializer) throws IOException {
-        return new AccountingService(fileSanitationService, accountStatementDeserializer);
+                                               Deserializer deserializer) throws IOException {
+        return new AccountingService(fileSanitationService, deserializer);
     }
 
     @Bean

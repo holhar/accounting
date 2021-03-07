@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface Deserializer {
 
-    public AccountStatement readStatement(List<String> lines);
+    AccountStatement readStatement(List<String> lines);
 }

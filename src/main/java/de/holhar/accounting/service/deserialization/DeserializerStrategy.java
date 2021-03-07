@@ -18,7 +18,7 @@ public class DeserializerStrategy implements Deserializer {
 
     @Override
     public AccountStatement readStatement(List<String> lines) {
-        if (lines.size() > 1) {
+        if (lines.size() < 1) {
             throw new IllegalArgumentException("Invalid lines given, size must be greater than zero");
         }
         if (lines.get(0).startsWith("Kontonummer")) {

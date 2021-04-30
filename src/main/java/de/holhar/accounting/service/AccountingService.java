@@ -1,6 +1,7 @@
 package de.holhar.accounting.service;
 
 import de.holhar.accounting.domain.AccountStatement;
+import de.holhar.accounting.domain.AnnualReport;
 import de.holhar.accounting.domain.CheckingAccountEntry;
 import de.holhar.accounting.domain.MonthlyReport;
 import de.holhar.accounting.service.deserialization.Deserializer;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -34,7 +37,7 @@ public class AccountingService {
                 // TODO: Incorporate credit card in monthly reports
                 .filter(e -> e.getValue().getType().equals(AccountStatement.Type.CHECKING_ACCOUNT))
                 .map(e -> createMonthlyReport(e.getValue()))
-                .collect(Collectors.toMap(e -> e.getFriendlyName(), e -> e, (x1, x2) -> x2, TreeMap::new));
+                .collect(Collectors.toMap(MonthlyReport::getFriendlyName, e -> e, (x1, x2) -> x2, TreeMap::new));
 
         printResults(reportMap);
     }
@@ -44,7 +47,7 @@ public class AccountingService {
                 .parallel()
                 .map(sanitationService::cleanUp)
                 .map(deserializer::readStatement)
-                .collect(Collectors.toMap(e -> e.getFriendlyName(), e -> e, (x1, x2) -> x2, TreeMap::new));
+                .collect(Collectors.toMap(AccountStatement::getFriendlyName, e -> e, (x1, x2) -> x2, TreeMap::new));
     }
 
     private MonthlyReport createMonthlyReport(AccountStatement accountStatement) {
@@ -52,27 +55,28 @@ public class AccountingService {
                 .stream()
                 .map(entry -> ((CheckingAccountEntry) entry).getAmount())
                 .filter(amount -> amount.intValue() < 0)
-                .reduce(new BigDecimal("0"), (x1, x2) -> x1.add(x2));
+                .reduce(new BigDecimal("0"), BigDecimal::add);
 
         BigDecimal profit = accountStatement.getEntries()
                 .stream()
                 .map(entry -> ((CheckingAccountEntry) entry).getAmount())
                 .filter(amount -> amount.intValue() > 0)
-                .reduce(new BigDecimal("0"), (x1, x2) -> x1.add(x2));
+                .reduce(new BigDecimal("0"), BigDecimal::add);
 
-        return new MonthlyReport(accountStatement.getFriendlyName(), profit, expenditure);
+        return new MonthlyReport(accountStatement.getFriendlyName(), accountStatement.getFrom(), profit, expenditure);
     }
 
     private void printResults(TreeMap<String, MonthlyReport> reportMap) {
-        reportMap.forEach((id, report) -> {
-            LOGGER.info(id);
-            LOGGER.info(report.toString());
-            LOGGER.info("===========================");
+        Map<Integer, List<MonthlyReport>> monthlyReportsPerYear = reportMap.values().stream().collect(Collectors.groupingBy(MonthlyReport::getYear));
+        monthlyReportsPerYear.forEach((year, reportList) -> {
+            AnnualReport annualReport = new AnnualReport(year + "_ANNUAL_REPORT", year, new BigDecimal("0.00"), new BigDecimal("0.00"));
+            reportList.forEach(monthlyReport -> {
+                LOGGER.info(monthlyReport.toString());
+                LOGGER.info("--------------------------------------------------------------------------------------");
+                annualReport.addProfitAndExpenses(monthlyReport.getIncome(), monthlyReport.getExpenditure());
+            });
+            LOGGER.info(annualReport.toString());
+            LOGGER.info("==================================================================================");
         });
-
-        BigDecimal totalWin = reportMap.entrySet().stream()
-                .map(e -> e.getValue().getWin())
-                .reduce(new BigDecimal("0"), (x1, x2) -> x1.add(x2));
-        LOGGER.info("Total win: {}", totalWin);
     }
 }

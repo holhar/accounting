@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MonthlyReport {
 
@@ -15,6 +17,8 @@ public class MonthlyReport {
     protected BigDecimal expenditure;
     protected BigDecimal win;
     protected BigDecimal savingRate;
+
+    protected final Set<CostCentre> costCentres = new TreeSet<>();
 
     public MonthlyReport(String friendlyName, LocalDate date, BigDecimal income, BigDecimal expenditure) {
         this.friendlyName = friendlyName;
@@ -61,6 +65,18 @@ public class MonthlyReport {
     public void calcSavingRate() {
         if (income.compareTo(new BigDecimal("0.00")) != 0) {
             savingRate = new BigDecimal("100.0000").divide(income, RoundingMode.DOWN).multiply(win);
+        }
+    }
+
+    public void addToCostCentres(CostCentre costCentre) {
+        if (costCentres.contains(costCentre)) {
+            costCentres.stream()
+                    .filter(c -> c.getType().equals(costCentre.getType()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Could not match given cost centre type " + costCentre.getType()))
+                    .addAmount(costCentre.getAmount());
+        } else {
+            costCentres.add(costCentre);
         }
     }
 

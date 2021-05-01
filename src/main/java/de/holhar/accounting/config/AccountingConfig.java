@@ -5,6 +5,8 @@ import de.holhar.accounting.service.deserialization.CreditCardStatementDeseriali
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.deserialization.AccountStatementDeserializer;
 import de.holhar.accounting.service.deserialization.DeserializerStrategy;
+import de.holhar.accounting.service.report.AccountStatementReportManager;
+import de.holhar.accounting.service.report.ReportManager;
 import de.holhar.accounting.service.sanitation.FileSanitationService;
 import de.holhar.accounting.service.sanitation.SanitationService;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +19,9 @@ public class AccountingConfig {
 
     @Bean
     public AccountingService accountingService(SanitationService fileSanitationService,
-                                               Deserializer deserializer) throws IOException {
-        return new AccountingService(fileSanitationService, deserializer);
+                                               Deserializer deserializer,
+                                               ReportManager reportManager) {
+        return new AccountingService(fileSanitationService, deserializer, reportManager);
     }
 
     @Bean
@@ -39,5 +42,10 @@ public class AccountingConfig {
     @Bean
     public Deserializer deserializer(Deserializer accountStatementDeserializer, Deserializer creditCardStatementDeserializer) {
         return new DeserializerStrategy(accountStatementDeserializer, creditCardStatementDeserializer);
+    }
+
+    @Bean
+    public ReportManager reportManager() {
+        return new AccountStatementReportManager();
     }
 }

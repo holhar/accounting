@@ -36,3 +36,6 @@ build/
 out
 
 src/main/resources/accounting
+
+### Misc
+application-private.properties

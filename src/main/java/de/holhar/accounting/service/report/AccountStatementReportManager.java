@@ -1,21 +1,42 @@
 package de.holhar.accounting.service.report;
 
+import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.domain.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class AccountStatementReportManager implements ReportManager {
 
     private final Map<CostCentre.Type, List<String>> costCentreTypeMap = new HashMap<>();
 
-    public AccountStatementReportManager() {
-        // TODO Externalize this configuration
-        costCentreTypeMap.put(CostCentre.Type.FOOD, Arrays.asList("Acme", "Stuff", "Blub"));
+    @Autowired
+    public AccountStatementReportManager(AppProperties appProperties) {
+        initCostCentreTypeMap(appProperties);
+    }
+
+    private void initCostCentreTypeMap(AppProperties appProperties) {
+        List<String> accommodation = Arrays.stream(appProperties.getExpense().getAccommodation().split(","))
+                .sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        costCentreTypeMap.put(CostCentre.Type.ACCOMMODATION, accommodation);
+        List<String> food = Arrays.stream(appProperties.getExpense().getFood().split(","))
+                .sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        costCentreTypeMap.put(CostCentre.Type.FOOD, food);
+        List<String> health = Arrays.stream(appProperties.getExpense().getHealth().split(","))
+                .sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        costCentreTypeMap.put(CostCentre.Type.HEALTH, health);
+        List<String> transportation = Arrays.stream(appProperties.getExpense().getTransportation().split(","))
+                .sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        costCentreTypeMap.put(CostCentre.Type.TRANSPORTATION, transportation);
+        List<String> purchases = Arrays.stream(appProperties.getExpense().getPurchases().split(","))
+                .sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        costCentreTypeMap.put(CostCentre.Type.LEISURE_ACTIVITIES_AND_PURCHASES, purchases);
     }
 
     public MonthlyReport createMonthlyReport(final LocalDate statementDate, Set<AccountStatement> statementSet) {
@@ -75,7 +96,7 @@ public class AccountStatementReportManager implements ReportManager {
 
     private CostCentre.Type resolveCostCentreType(CheckingAccountEntry checkingAccountEntry) {
         return costCentreTypeMap.entrySet().stream()
-                .filter(mapEntry -> matchCostCentreCandidate(mapEntry.getValue(), checkingAccountEntry.getBookingText()))
+                .filter(mapEntry -> matchCostCentreCandidate(mapEntry.getValue(), checkingAccountEntry.getClient()))
                 .map(Map.Entry::getKey)
                 .findFirst().orElse(CostCentre.Type.MISCELLANEOUS);
     }

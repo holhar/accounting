@@ -30,9 +30,6 @@ public class CostCentre implements Comparable<CostCentre> {
     }
 
     public void addAmount(BigDecimal newAmount) {
-        if (newAmount.compareTo(new BigDecimal("0.0000")) < 0) {
-            newAmount = newAmount.multiply(new BigDecimal("-1.0000"));
-        }
         this.amount = this.amount.add(newAmount);
     }
 

@@ -32,7 +32,7 @@ public class AccountingController {
     public void createReport() {
         try {
             Path csvPath = Paths.get(csvDirString).toRealPath();
-            accountingService.read(csvPath);
+            accountingService.createReport(csvPath);
         } catch (IOException e) {
             LOGGER.error("Could not create report", e);
         }

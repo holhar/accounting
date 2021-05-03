@@ -35,7 +35,7 @@ public class AccountingService {
         this.reportManager = reportManager;
     }
 
-    public void read(Path csvPath) throws IOException {
+    public void createReport(Path csvPath) throws IOException {
         Map<LocalDate, Set<AccountStatement>> accountingStatementsPerMonthMap = Files.list(csvPath)
                 .parallel()
                 .map(sanitationService::cleanUp)

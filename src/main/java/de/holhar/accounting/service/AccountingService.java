@@ -8,6 +8,8 @@ import de.holhar.accounting.service.report.ReportManager;
 import de.holhar.accounting.service.sanitation.SanitationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class AccountingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingService.class);
@@ -25,6 +28,7 @@ public class AccountingService {
     private final Deserializer deserializer;
     private final ReportManager reportManager;
 
+    @Autowired
     public AccountingService(SanitationService sanitationService, Deserializer deserializer, ReportManager reportManager) {
         this.sanitationService = sanitationService;
         this.deserializer = deserializer;

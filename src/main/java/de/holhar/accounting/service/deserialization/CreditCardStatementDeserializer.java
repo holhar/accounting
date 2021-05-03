@@ -1,6 +1,7 @@
 package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.domain.*;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component(value = "creditCardStatementDeserializer")
 public class CreditCardStatementDeserializer extends AbstractStatementDeserializer implements Deserializer {
 
     @Override

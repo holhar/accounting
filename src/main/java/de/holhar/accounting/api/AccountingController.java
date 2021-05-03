@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("accounting/report")
+@RequestMapping("/report/create")
 public class AccountingController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingController.class);

@@ -2,9 +2,11 @@ package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.domain.AccountStatement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component(value = "deserializer")
 public class DeserializerStrategy implements Deserializer {
 
     private final Deserializer accountStatementDeserializer;

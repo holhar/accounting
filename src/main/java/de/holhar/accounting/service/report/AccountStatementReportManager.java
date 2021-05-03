@@ -1,12 +1,14 @@
 package de.holhar.accounting.service.report;
 
 import de.holhar.accounting.domain.*;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Component
 public class AccountStatementReportManager implements ReportManager {
 
     private final Map<CostCentre.Type, List<String>> costCentreTypeMap = new HashMap<>();

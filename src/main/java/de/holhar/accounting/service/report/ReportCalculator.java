@@ -28,7 +28,7 @@ public class ReportCalculator {
     }
 
     private List<String> getAsArrayList(String stringList) {
-        return Arrays.stream(stringList.split(",")).sorted().map(s -> s.toLowerCase().trim()).collect(Collectors.toList());
+        return Arrays.stream(stringList.split(",")).sorted().map(String::trim).collect(Collectors.toList());
     }
 
     private void initCostCentreTypeMap(AppProperties props) {
@@ -50,7 +50,7 @@ public class ReportCalculator {
             throw new IllegalArgumentException("CreditCardEntry not applicable for isNotOwnTransfer calculation");
         }
         final String client = ((CheckingAccountEntry) entry).getClient();
-        return ownTransferIdentifiers.stream().noneMatch(client::contains);
+        return ownTransferIdentifiers.stream().noneMatch(client::equalsIgnoreCase);
     }
 
     public BigDecimal getExpenditure(List<Entry> statementEntries) {
@@ -67,10 +67,11 @@ public class ReportCalculator {
                 .reduce(new BigDecimal("0"), BigDecimal::add);
     }
 
-    // FIXME Does not calculate cost centres correctly
     public CostCentre getCostCentre(Entry entry) {
         if (entry.getAmount().compareTo(new BigDecimal("0.000")) > 0) {
-            return new CostCentre(CostCentre.Type.MISCELLANEOUS);
+            CostCentre profit = new CostCentre(CostCentre.Type.PROFIT);
+            profit.addAmount(entry.getAmount());
+            return profit;
         }
 
         CostCentre.Type type;
@@ -101,7 +102,7 @@ public class ReportCalculator {
     }
 
     boolean matchCostCentreCandidate(List<String> costCentreCandidates, String clientOrDescription) {
-        return costCentreCandidates.stream().anyMatch(c -> c.contains(clientOrDescription));
+        return costCentreCandidates.stream().anyMatch(clientOrDescription::contains);
     }
 
     List<String> getOwnTransferIdentifiers() {

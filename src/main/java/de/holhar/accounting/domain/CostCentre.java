@@ -11,7 +11,8 @@ public class CostCentre implements Comparable<CostCentre> {
         HEALTH,
         TRANSPORTATION,
         LEISURE_ACTIVITIES_AND_PURCHASES,
-        MISCELLANEOUS
+        MISCELLANEOUS,
+        PROFIT
     }
 
     private final Type type;

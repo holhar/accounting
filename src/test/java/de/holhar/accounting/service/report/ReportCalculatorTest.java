@@ -6,12 +6,15 @@ import de.holhar.accounting.domain.CheckingAccountEntry;
 import de.holhar.accounting.domain.CostCentre;
 import de.holhar.accounting.domain.CreditCardEntry;
 import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.domain.MonthlyReport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,13 +32,14 @@ class ReportCalculatorTest {
     public void setup() {
         AppProperties appProperties = mock(AppProperties.class);
         Expense expense = new Expense();
-        expense.setAccommodation("accommodationId1,accommodationId2");
-        expense.setFood("superMarket1,superMarket2,superMarket3");
-        expense.setHealth("awesomePharmacy");
-        expense.setPurchases("thatRetailerEveryoneUses,sportsEquipment");
-        expense.setTransportation("cityTicket,sirFlightALot");
+        expense.setAccommodation(Arrays.asList("accommodationId1","accommodationId2"));
+        expense.setFood(Arrays.asList("superMarket1","superMarket2","superMarket3"));
+        expense.setHealth(Arrays.asList("awesomePharmacy","intendedUse"));
+        expense.setPurchases(Arrays.asList("thatRetailerEveryoneUses","sportsEquipment"));
+        expense.setTransportation(Arrays.asList("cityTicket","sirFlightALot"));
         when(appProperties.getExpense()).thenReturn(expense);
         when(appProperties.getOwnTransferIdentifiers()).thenReturn(Arrays.asList("Own Account one", "Own Account two"));
+        when(appProperties.getIntendedUseIdentifiers()).thenReturn(Collections.singletonList("doNotUseClientField"));
         reportCalculator = new ReportCalculator(appProperties);
     }
 
@@ -120,7 +124,7 @@ class ReportCalculatorTest {
     }
 
     @Test
-    void getProfits_positiveEntriesOnly_shouldResultInZeroProfit() {
+    void getProfit_positiveEntriesOnly_shouldResultInZeroProfit() {
         List<Entry> entries = Arrays.asList(
            getCheckingAccountEntryAmountOnly("-100.45"),
            getCheckingAccountEntryAmountOnly("-0.23"),
@@ -135,7 +139,7 @@ class ReportCalculatorTest {
     }
 
     @Test
-    void getProfits_emptyEntriesList_shouldResultInZeroProfit() {
+    void getProfit_emptyEntriesList_shouldResultInZeroProfit() {
         List<Entry> entries = Collections.emptyList();
         BigDecimal actual = reportCalculator.getProfit(entries);
         assertEquals(new BigDecimal("0"), actual);
@@ -173,7 +177,21 @@ class ReportCalculatorTest {
     }
 
     @Test
-    void resolveCostCentreType_CheckingAccountEntry_doesNotMatch() {
+    void resolveCostCentreType_checkingAccountEntry_matches() {
+        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("this superMarket3, you know");
+        CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
+        assertEquals(CostCentre.Type.FOOD, actual);
+    }
+
+    @Test
+    void resolveCostCentreType_checkingAccountEntry_matchesForIntendedUse() {
+        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("doNotUseClientField");
+        CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
+        assertEquals(CostCentre.Type.HEALTH, actual);
+    }
+
+    @Test
+    void resolveCostCentreType_checkingAccountEntry_doesNotMatch() {
         CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("somethingCompletelyDifferent");
         CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
         assertEquals(CostCentre.Type.MISCELLANEOUS, actual);
@@ -209,17 +227,17 @@ class ReportCalculatorTest {
 
     private CheckingAccountEntry getCheckingAccountEntryClientOnly(String client) {
         return new CheckingAccountEntry(null, null, null, client,
-                null, null, null, null, null, null, null);
+                "intendedUse", null, null, null, null, null, null);
     }
 
     private CheckingAccountEntry getCheckingAccountEntryAmountOnly(String amount) {
         return new CheckingAccountEntry(null, null, null, null,
-                null, null, null, new BigDecimal(amount), null, null, null);
+                "intendedUse", null, null, new BigDecimal(amount), null, null, null);
     }
 
     private CheckingAccountEntry getCheckingAccountEntryAmountAndClientOnly(String amount, String client) {
         return new CheckingAccountEntry(null, null, null, client,
-                null, null, null, new BigDecimal(amount), null, null, null);
+                "intendedUse", null, null, new BigDecimal(amount), null, null, null);
     }
 
 }

@@ -1,50 +1,52 @@
 package de.holhar.accounting.config;
 
+import java.util.List;
+
 public class Expense {
 
-    private String accommodation;
-    private String food;
-    private String health;
-    private String transportation;
-    private String purchases;
+    private List<String> accommodation;
+    private List<String> food;
+    private List<String> health;
+    private List<String> transportation;
+    private List<String> purchases;
 
-    public String getAccommodation() {
+    public List<String> getAccommodation() {
         return accommodation;
     }
 
-    public void setAccommodation(String accommodation) {
+    public void setAccommodation(List<String> accommodation) {
         this.accommodation = accommodation;
     }
 
-    public String getFood() {
+    public List<String> getFood() {
         return food;
     }
 
-    public void setFood(String food) {
+    public void setFood(List<String> food) {
         this.food = food;
     }
 
-    public String getHealth() {
+    public List<String> getHealth() {
         return health;
     }
 
-    public void setHealth(String health) {
+    public void setHealth(List<String> health) {
         this.health = health;
     }
 
-    public String getTransportation() {
+    public List<String> getTransportation() {
         return transportation;
     }
 
-    public void setTransportation(String transportation) {
+    public void setTransportation(List<String> transportation) {
         this.transportation = transportation;
     }
 
-    public String getPurchases() {
+    public List<String> getPurchases() {
         return purchases;
     }
 
-    public void setPurchases(String purchases) {
+    public void setPurchases(List<String> purchases) {
         this.purchases = purchases;
     }
 }

@@ -9,34 +9,31 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class ReportCalculator {
 
     private final List<String> ownTransferIdentifiers;
+    private final List<String> intendedUseIdentifiers;
     private final Map<CostCentre.Type, List<String>> costCentreTypeMap = new HashMap<>();
 
     public ReportCalculator(AppProperties appProperties) {
         this.ownTransferIdentifiers = appProperties.getOwnTransferIdentifiers();
+        this.intendedUseIdentifiers = appProperties.getIntendedUseIdentifiers();
         initCostCentreTypeMap(appProperties);
     }
 
-    private List<String> getAsArrayList(String stringList) {
-        return Arrays.stream(stringList.split(",")).sorted().map(String::trim).collect(Collectors.toList());
-    }
-
     private void initCostCentreTypeMap(AppProperties props) {
-        List<String> accommodation = getAsArrayList(Optional.ofNullable(props.getExpense().getAccommodation()).orElse(""));
-        List<String> food = getAsArrayList(Optional.ofNullable(props.getExpense().getFood()).orElse(""));
-        List<String> health = getAsArrayList(Optional.ofNullable(props.getExpense().getHealth()).orElse(""));
-        List<String> transportation = getAsArrayList(Optional.ofNullable(props.getExpense().getTransportation()).orElse(""));
-        List<String> purchases = getAsArrayList(Optional.ofNullable(props.getExpense().getPurchases()).orElse(""));
+        List<String> accommodation = Optional.ofNullable(props.getExpense().getAccommodation()).orElse(Collections.emptyList());
+        List<String> food = Optional.ofNullable(props.getExpense().getFood()).orElse(Collections.emptyList());
+        List<String> health = Optional.ofNullable(props.getExpense().getHealth()).orElse(Collections.emptyList());
+        List<String> transportation = Optional.ofNullable(props.getExpense().getTransportation()).orElse(Collections.emptyList());
+        List<String> purchases = Optional.ofNullable(props.getExpense().getPurchases()).orElse(Collections.emptyList());
 
         costCentreTypeMap.put(CostCentre.Type.ACCOMMODATION, accommodation);
         costCentreTypeMap.put(CostCentre.Type.FOOD, food);
@@ -45,6 +42,10 @@ public class ReportCalculator {
         costCentreTypeMap.put(CostCentre.Type.LEISURE_ACTIVITIES_AND_PURCHASES, purchases);
     }
 
+    /**
+     * Determines if a given checking account statement represents a transfer to an account belonging to the owner or
+     * not. It does this by comparing the client of the statement to a configured list of own accounts or credit cards.
+     */
     public boolean isNotOwnTransfer(Entry entry) {
         if (entry instanceof CreditCardEntry) {
             throw new IllegalArgumentException("CreditCardEntry not applicable for isNotOwnTransfer calculation");
@@ -88,8 +89,12 @@ public class ReportCalculator {
     }
 
     CostCentre.Type resolveCostCentreType(CheckingAccountEntry entry) {
+        var entryClientOrIntendedUse = intendedUseIdentifiers.stream()
+                .filter(id -> entry.getClient().contains(id))
+                .map(id -> entry.getIntendedUse())
+                .findFirst().orElse(entry.getClient());
         return costCentreTypeMap.entrySet().stream()
-                .filter(mapEntry -> matchCostCentreCandidate(mapEntry.getValue(), entry.getClient()))
+                .filter(mapEntry -> matchCostCentreCandidate(mapEntry.getValue(), entryClientOrIntendedUse))
                 .map(Map.Entry::getKey)
                 .findFirst().orElse(CostCentre.Type.MISCELLANEOUS);
     }

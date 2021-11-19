@@ -12,6 +12,7 @@ public class AppProperties {
     private boolean readStatementsEnabled;
     private String csvPath;
     private List<String> ownTransferIdentifiers;
+    private List<String> intendedUseIdentifiers;
 
     private Expense expense = new Expense();
 
@@ -45,5 +46,13 @@ public class AppProperties {
 
     public void setOwnTransferIdentifiers(List<String> ownTransferIdentifiers) {
         this.ownTransferIdentifiers = ownTransferIdentifiers;
+    }
+
+    public List<String> getIntendedUseIdentifiers() {
+        return intendedUseIdentifiers;
+    }
+
+    public void setIntendedUseIdentifiers(List<String> intendedUseIdentifiers) {
+        this.intendedUseIdentifiers = intendedUseIdentifiers;
     }
 }

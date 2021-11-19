@@ -146,10 +146,25 @@ class ReportCalculatorTest {
     }
 
     @Test
-    void resolveCostCentreType_CheckingAccountEntry_matches() {
-        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("this superMarket3, you know");
-        CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
-        assertEquals(CostCentre.Type.FOOD, actual);
+    void addToCostCentres() {
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.NOVEMBER, 1),
+                new BigDecimal("4321.23"),
+                new BigDecimal("1834.34")
+        );
+        Entry entry = getCheckingAccountEntryAmountAndClientOnly("-69.99", "XX sportsEquipment YY");
+
+        reportCalculator.addToCostCentres(monthlyReport, entry);
+
+        assertEquals(1, monthlyReport.getCostCentres().size());
+        BigDecimal amount = monthlyReport.getCostCentres().stream()
+                .filter(c -> c.getType().equals(CostCentre.Type.LEISURE_ACTIVITIES_AND_PURCHASES))
+                .map(CostCentre::getAmount)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Should contain LEISURE_ACTIVITIES_AND_PURCHASES cost centre"));
+        assertEquals(0, new BigDecimal("-69.99").compareTo(amount));
+
     }
 
     @Test

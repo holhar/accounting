@@ -20,21 +20,22 @@ public class AccountStatementReportManager implements ReportManager {
 
     public MonthlyReport createMonthlyReport(final LocalDate statementDate, Set<AccountStatement> statementSet) {
         if (statementSet.size() != 2) {
-            String errorMessage = String.format("Monthly report '%s' does contain '%d' AccountStatements for this month",
+            String errorMessage = String.format("Monthly report  from '%s' does contain '%d' AccountStatements for " +
+                            "this month -> should be '2', one checking account and one credit card statement",
                     statementDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), statementSet.size());
             throw new IllegalStateException(errorMessage);
         }
 
-        String errorMessage = String.format("Monthly report '%s' does not contain a ",
+        String errorMessagePrefix = String.format("Monthly report from '%s' does not contain a ",
                 statementDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 
         AccountStatement checkingAccountStatement = statementSet.stream()
                 .filter(statement -> statement.getType().equals(AccountStatement.Type.CHECKING_ACCOUNT))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException(errorMessage + "CHECKING_ACCOUNT statement"));
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(errorMessagePrefix + "CHECKING_ACCOUNT statement"));
 
         AccountStatement creditCardStatement = statementSet.stream()
                 .filter(statement -> statement.getType().equals(AccountStatement.Type.CREDIT_CARD))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException(errorMessage + "CREDIT_CARD statement"));
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(errorMessagePrefix + "CREDIT_CARD statement"));
 
         BigDecimal expenditure = reportCalculator.getExpenditure(checkingAccountStatement.getEntries());
         BigDecimal profit = reportCalculator.getProfit(checkingAccountStatement.getEntries());
@@ -47,9 +48,9 @@ public class AccountStatementReportManager implements ReportManager {
 
         checkingAccountStatement.getEntries().stream()
                 .filter(reportCalculator::isNotOwnTransfer)
-                .forEach(entry -> monthlyReport.addToCostCentres(reportCalculator.getCostCentre(entry)));
+                .forEach(entry -> reportCalculator.addToCostCentres(monthlyReport, entry));
 
-        creditCardStatement.getEntries().forEach(entry -> monthlyReport.addToCostCentres(reportCalculator.getCostCentre(entry)));
+        creditCardStatement.getEntries().forEach(entry -> reportCalculator.addToCostCentres(monthlyReport, entry));
 
         // TODO Add confidence test to ensure that the sum of cost centres matches the overall expenditure
         return monthlyReport;

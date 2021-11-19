@@ -68,16 +68,9 @@ public class MonthlyReport {
         }
     }
 
-    public void addToCostCentres(CostCentre costCentre) {
-        if (costCentres.contains(costCentre)) {
-            costCentres.stream()
-                    .filter(c -> c.getType().equals(costCentre.getType()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Could not match given cost centre type " + costCentre.getType()))
-                    .addAmount(costCentre.getAmount());
-        } else {
-            costCentres.add(costCentre);
-        }
+    // FIXME: Violates immutability principle
+    public Set<CostCentre> getCostCentres() {
+        return costCentres;
     }
 
     @Override

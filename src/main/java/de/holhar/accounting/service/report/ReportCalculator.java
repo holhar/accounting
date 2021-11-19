@@ -5,6 +5,7 @@ import de.holhar.accounting.domain.CheckingAccountEntry;
 import de.holhar.accounting.domain.CostCentre;
 import de.holhar.accounting.domain.CreditCardEntry;
 import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.domain.MonthlyReport;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -68,7 +69,20 @@ public class ReportCalculator {
                 .reduce(new BigDecimal("0"), BigDecimal::add);
     }
 
-    public CostCentre getCostCentre(Entry entry) {
+    public void addToCostCentres(MonthlyReport monthlyReport, Entry entry) {
+        CostCentre costCentre = getCostCentre(entry);
+        if (monthlyReport.getCostCentres().contains(costCentre)) {
+            monthlyReport.getCostCentres().stream()
+                    .filter(c -> c.getType().equals(costCentre.getType()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Could not match given cost centre type " + costCentre.getType()))
+                    .addAmount(costCentre.getAmount());
+        } else {
+            monthlyReport.getCostCentres().add(costCentre);
+        }
+    }
+
+    CostCentre getCostCentre(Entry entry) {
         if (entry.getAmount().compareTo(new BigDecimal("0.000")) > 0) {
             CostCentre profit = new CostCentre(CostCentre.Type.PROFIT);
             profit.addAmount(entry.getAmount());

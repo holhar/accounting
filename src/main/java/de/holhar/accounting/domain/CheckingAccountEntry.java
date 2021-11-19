@@ -18,8 +18,8 @@ public class CheckingAccountEntry implements Entry {
     private final String customerReference;
 
     public CheckingAccountEntry(LocalDate bookingDate, LocalDate valueDate, String bookingText, String client, String intendedUse,
-                 String accountId, String bankCode, BigDecimal amount, String creditorId, String clientReference,
-                 String customerReference) {
+                                String accountId, String bankCode, BigDecimal amount, String creditorId, String clientReference,
+                                String customerReference) {
         this.bookingDate = bookingDate;
         this.valueDate = valueDate;
         this.bookingText = bookingText;

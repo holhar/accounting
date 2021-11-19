@@ -1,11 +1,18 @@
 package de.holhar.accounting.service.deserialization;
 
-import de.holhar.accounting.domain.*;
+import de.holhar.accounting.domain.AccountIdTypeContainer;
+import de.holhar.accounting.domain.AccountStatement;
+import de.holhar.accounting.domain.Balance;
+import de.holhar.accounting.domain.CheckingAccountEntry;
+import de.holhar.accounting.domain.Entry;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

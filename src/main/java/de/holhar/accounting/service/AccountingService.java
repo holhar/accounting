@@ -16,7 +16,9 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,8 +45,8 @@ public class AccountingService {
                 .collect(Collectors.groupingBy(AccountStatement::getFrom, TreeMap::new, Collectors.toSet()));
 
         Map<Integer, Set<MonthlyReport>> monthlyReportsPerYear = accountingStatementsPerMonthMap.entrySet().stream()
-                        .map(entry -> reportManager.createMonthlyReport(entry.getKey(), entry.getValue()))
-                        .collect(Collectors.groupingBy(MonthlyReport::getYear, TreeMap::new, Collectors.toSet()));
+                .map(entry -> reportManager.createMonthlyReport(entry.getKey(), entry.getValue()))
+                .collect(Collectors.groupingBy(MonthlyReport::getYear, TreeMap::new, Collectors.toSet()));
 
         monthlyReportsPerYear.forEach((year, reportList) -> {
             AnnualReport annualReport = new AnnualReport(year + "_ANNUAL_REPORT", year, new BigDecimal("0.00"), new BigDecimal("0.00"));

@@ -39,7 +39,7 @@ public class CreditCardStatementDeserializerTest {
         assertEquals(LocalDate.parse("2020-02-29"), accountStatement.getBalance().getDate());
         assertEquals(33, accountStatement.getEntries().size());
 
-        CreditCardEntry firstEntry = (CreditCardEntry)accountStatement.getEntries().get(0);
+        CreditCardEntry firstEntry = (CreditCardEntry) accountStatement.getEntries().get(0);
         assertTrue(firstEntry.isBilledAndNotIncluded());
         assertEquals(LocalDate.parse("2020-02-01"), firstEntry.getValueDate());
         assertEquals(LocalDate.parse("2020-01-30"), firstEntry.getReceiptDate());
@@ -47,7 +47,7 @@ public class CreditCardStatementDeserializerTest {
         assertEquals(new BigDecimal("-12.72"), firstEntry.getAmount());
         assertEquals(new BigDecimal("-14.99"), firstEntry.getOriginalAmount());
 
-        CreditCardEntry lastEntry = (CreditCardEntry)accountStatement.getEntries().get(32);
+        CreditCardEntry lastEntry = (CreditCardEntry) accountStatement.getEntries().get(32);
         assertTrue(lastEntry.isBilledAndNotIncluded());
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getValueDate());
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getReceiptDate());

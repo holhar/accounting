@@ -32,11 +32,11 @@ class ReportCalculatorTest {
     public void setup() {
         AppProperties appProperties = mock(AppProperties.class);
         Expense expense = new Expense();
-        expense.setAccommodation(Arrays.asList("accommodationId1","accommodationId2"));
-        expense.setFood(Arrays.asList("superMarket1","superMarket2","superMarket3"));
-        expense.setHealth(Arrays.asList("awesomePharmacy","intendedUse"));
-        expense.setPurchases(Arrays.asList("thatRetailerEveryoneUses","sportsEquipment"));
-        expense.setTransportation(Arrays.asList("cityTicket","sirFlightALot"));
+        expense.setAccommodation(Arrays.asList("accommodationId1", "accommodationId2"));
+        expense.setFood(Arrays.asList("superMarket1", "superMarket2", "superMarket3"));
+        expense.setHealth(Arrays.asList("awesomePharmacy", "intendedUse"));
+        expense.setPurchases(Arrays.asList("thatRetailerEveryoneUses", "sportsEquipment"));
+        expense.setTransportation(Arrays.asList("cityTicket", "sirFlightALot"));
         when(appProperties.getExpense()).thenReturn(expense);
         when(appProperties.getOwnTransferIdentifiers()).thenReturn(Arrays.asList("Own Account one", "Own Account two"));
         when(appProperties.getIntendedUseIdentifiers()).thenReturn(Collections.singletonList("doNotUseClientField"));
@@ -89,11 +89,11 @@ class ReportCalculatorTest {
     @Test
     void getExpenditures_positiveEntriesOnly_shouldResultInZeroExpenditures() {
         List<Entry> entries = Arrays.asList(
-           getCheckingAccountEntryAmountOnly("100.45"),
-           getCheckingAccountEntryAmountOnly("0.23"),
-           getCheckingAccountEntryAmountOnly("23.98"),
-           getCheckingAccountEntryAmountOnly("2359.54"),
-           getCheckingAccountEntryAmountOnly("5.45")
+                getCheckingAccountEntryAmountOnly("100.45"),
+                getCheckingAccountEntryAmountOnly("0.23"),
+                getCheckingAccountEntryAmountOnly("23.98"),
+                getCheckingAccountEntryAmountOnly("2359.54"),
+                getCheckingAccountEntryAmountOnly("5.45")
         );
 
         BigDecimal actual = reportCalculator.getExpenditure(entries);
@@ -126,11 +126,11 @@ class ReportCalculatorTest {
     @Test
     void getProfit_positiveEntriesOnly_shouldResultInZeroProfit() {
         List<Entry> entries = Arrays.asList(
-           getCheckingAccountEntryAmountOnly("-100.45"),
-           getCheckingAccountEntryAmountOnly("-0.23"),
-           getCheckingAccountEntryAmountOnly("-23.98"),
-           getCheckingAccountEntryAmountOnly("-2359.54"),
-           getCheckingAccountEntryAmountOnly("-5.45")
+                getCheckingAccountEntryAmountOnly("-100.45"),
+                getCheckingAccountEntryAmountOnly("-0.23"),
+                getCheckingAccountEntryAmountOnly("-23.98"),
+                getCheckingAccountEntryAmountOnly("-2359.54"),
+                getCheckingAccountEntryAmountOnly("-5.45")
         );
 
         BigDecimal actual = reportCalculator.getProfit(entries);
@@ -228,15 +228,15 @@ class ReportCalculatorTest {
 
     @Test
     void matchCostCentreCandidate_clientOrDescriptionContainsCandidate_shouldReturnTrue() {
-        List<String> costCentreCandidates = Arrays.asList("accommodationId1","accommodationId2");
+        List<String> costCentreCandidates = Arrays.asList("accommodationId1", "accommodationId2");
         boolean actual = reportCalculator.matchCostCentreCandidate(costCentreCandidates, "accommodationId2 bla");
         assertTrue(actual);
     }
 
     @Test
     void matchCostCentreCandidate_clientOrDescriptionDoesNotContainCandidate_shouldReturnFalse() {
-        List<String> costCentreCandidates = Arrays.asList("accommodationId1 bla","accommodationId2 blub");
-        boolean actual = reportCalculator.matchCostCentreCandidate(costCentreCandidates,"somethingCompletelyDifferent");
+        List<String> costCentreCandidates = Arrays.asList("accommodationId1 bla", "accommodationId2 blub");
+        boolean actual = reportCalculator.matchCostCentreCandidate(costCentreCandidates, "somethingCompletelyDifferent");
         assertFalse(actual);
     }
 

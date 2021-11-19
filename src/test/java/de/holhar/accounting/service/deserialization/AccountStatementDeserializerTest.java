@@ -39,7 +39,7 @@ class AccountStatementDeserializerTest {
         assertEquals(LocalDate.parse("2020-01-31"), accountStatement.getBalance().getDate());
         assertEquals(31, accountStatement.getEntries().size());
 
-        CheckingAccountEntry firstEntry = (CheckingAccountEntry)accountStatement.getEntries().get(0);
+        CheckingAccountEntry firstEntry = (CheckingAccountEntry) accountStatement.getEntries().get(0);
         assertEquals(LocalDate.parse("2020-01-31"), firstEntry.getBookingDate());
         assertEquals(LocalDate.parse("2020-01-31"), firstEntry.getValueDate());
         assertEquals("Überweisung", firstEntry.getBookingText());
@@ -52,7 +52,7 @@ class AccountStatementDeserializerTest {
         assertTrue(firstEntry.getClientReference().isBlank());
         assertEquals("NOTPROVIDED", firstEntry.getCustomerReference());
 
-        CheckingAccountEntry lastEntry = (CheckingAccountEntry)accountStatement.getEntries().get(30);
+        CheckingAccountEntry lastEntry = (CheckingAccountEntry) accountStatement.getEntries().get(30);
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getBookingDate());
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getValueDate());
         assertEquals("Lastschrift", lastEntry.getBookingText());

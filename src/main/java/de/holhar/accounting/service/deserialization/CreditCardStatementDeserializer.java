@@ -1,6 +1,10 @@
 package de.holhar.accounting.service.deserialization;
 
-import de.holhar.accounting.domain.*;
+import de.holhar.accounting.domain.AccountIdTypeContainer;
+import de.holhar.accounting.domain.AccountStatement;
+import de.holhar.accounting.domain.Balance;
+import de.holhar.accounting.domain.CreditCardEntry;
+import de.holhar.accounting.domain.Entry;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -56,10 +60,10 @@ public class CreditCardStatementDeserializer extends AbstractStatementDeserializ
         String originalAmountString = entryFields.isEmpty()
                 ? "0"
                 : entryFields.pop()
-                    .replace(".", "")
-                    .replace(",", ".")
-                    .replace("USD", "")
-                    .trim();
+                .replace(".", "")
+                .replace(",", ".")
+                .replace("USD", "")
+                .trim();
 
         return new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate, description,
                 new BigDecimal(amountString), new BigDecimal(originalAmountString));

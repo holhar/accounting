@@ -9,20 +9,22 @@ import java.util.List;
 @Component(value = "deserializer")
 public class DeserializerStrategy implements Deserializer {
 
-    private final Deserializer accountStatementDeserializer;
-    private final Deserializer creditCardStatementDeserializer;
+    private final AccountStatementDeserializer accountStatementDeserializer;
+    private final CreditCardStatementDeserializer creditCardStatementDeserializer;
 
     @Autowired
-    public DeserializerStrategy(Deserializer accountStatementDeserializer, Deserializer creditCardStatementDeserializer) {
+    public DeserializerStrategy(AccountStatementDeserializer accountStatementDeserializer,
+                                CreditCardStatementDeserializer creditCardStatementDeserializer) {
         this.accountStatementDeserializer = accountStatementDeserializer;
         this.creditCardStatementDeserializer = creditCardStatementDeserializer;
     }
 
     @Override
     public AccountStatement readStatement(List<String> lines) {
-        if (lines.size() < 1) {
+        if (lines.isEmpty()) {
             throw new IllegalArgumentException("Invalid lines given, size must be greater than zero");
         }
+        // TODO Make values configurable externally
         if (lines.get(0).startsWith("Kontonummer")) {
             return accountStatementDeserializer.readStatement(lines);
         } else if (lines.get(0).startsWith("Kreditkarte")) {

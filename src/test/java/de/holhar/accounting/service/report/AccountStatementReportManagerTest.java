@@ -1,23 +1,21 @@
 package de.holhar.accounting.service.report;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.mock;
-
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class AccountStatementReportManagerTest {
 
+    @InjectMocks
     private AccountStatementReportManager manager;
 
-    @BeforeEach
-    public void init() {
-        ReportCalculator reportCalculator = mock(ReportCalculator.class);
-        manager = new AccountStatementReportManager(reportCalculator);
-    }
+    @Mock
+    private ReportCalculator reportCalculator;
 
+    // TODO write test
     @Test
     void createMonthlyReport() {
 

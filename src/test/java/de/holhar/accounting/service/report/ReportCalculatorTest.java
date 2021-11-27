@@ -1,5 +1,6 @@
 package de.holhar.accounting.service.report;
 
+import de.holhar.accounting.TestUtils;
 import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.config.Expense;
 import de.holhar.accounting.domain.CheckingAccountEntry;
@@ -52,14 +53,14 @@ class ReportCalculatorTest {
 
     @Test
     void isNotOwnTransfer_givenCheckingAccountEntryIsOwnAccount_shouldReturnTrue() {
-        Entry entry = getCheckingAccountEntryClientOnly("Own Account one");
+        Entry entry = TestUtils.getCheckingAccountEntryClientOnly("Own Account one");
         boolean actual = reportCalculator.isNotOwnTransfer(entry);
         assertFalse(actual);
     }
 
     @Test
     void isNotOwnTransfer_givenCheckingAccountEntryIsNOTOwnAccount_shouldReturnFalse() {
-        Entry entry = getCheckingAccountEntryClientOnly("NOT Own Account one");
+        Entry entry = TestUtils.getCheckingAccountEntryClientOnly("Different account");
         boolean actual = reportCalculator.isNotOwnTransfer(entry);
         assertTrue(actual);
     }
@@ -74,11 +75,11 @@ class ReportCalculatorTest {
     @Test
     void getExpenditure_negativeAndPositiveEntries_shouldOnlyAddNegativeEntries() {
         List<Entry> entries = Arrays.asList(
-                getCheckingAccountEntryAmountOnly("100.45"),
-                getCheckingAccountEntryAmountOnly("-100.82"),
-                getCheckingAccountEntryAmountOnly("23.98"),
-                getCheckingAccountEntryAmountOnly("2359.54"),
-                getCheckingAccountEntryAmountOnly("-1084.21")
+                TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-100.82"),
+                TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
+                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-1084.21")
         );
 
         BigDecimal actual = reportCalculator.getExpenditure(entries);
@@ -89,11 +90,11 @@ class ReportCalculatorTest {
     @Test
     void getExpenditures_positiveEntriesOnly_shouldResultInZeroExpenditures() {
         List<Entry> entries = Arrays.asList(
-                getCheckingAccountEntryAmountOnly("100.45"),
-                getCheckingAccountEntryAmountOnly("0.23"),
-                getCheckingAccountEntryAmountOnly("23.98"),
-                getCheckingAccountEntryAmountOnly("2359.54"),
-                getCheckingAccountEntryAmountOnly("5.45")
+                TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
+                TestUtils.getCheckingAccountEntryAmountOnly("0.23"),
+                TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
+                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
+                TestUtils.getCheckingAccountEntryAmountOnly("5.45")
         );
 
         BigDecimal actual = reportCalculator.getExpenditure(entries);
@@ -111,11 +112,11 @@ class ReportCalculatorTest {
     @Test
     void getProfit_negativeAndPositiveEntries_shouldOnlyAddPositiveEntries() {
         List<Entry> entries = Arrays.asList(
-                getCheckingAccountEntryAmountOnly("100.45"),
-                getCheckingAccountEntryAmountOnly("-100.82"),
-                getCheckingAccountEntryAmountOnly("23.98"),
-                getCheckingAccountEntryAmountOnly("2359.54"),
-                getCheckingAccountEntryAmountOnly("-1084.21")
+                TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-100.82"),
+                TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
+                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-1084.21")
         );
 
         BigDecimal actual = reportCalculator.getProfit(entries);
@@ -126,11 +127,11 @@ class ReportCalculatorTest {
     @Test
     void getProfit_positiveEntriesOnly_shouldResultInZeroProfit() {
         List<Entry> entries = Arrays.asList(
-                getCheckingAccountEntryAmountOnly("-100.45"),
-                getCheckingAccountEntryAmountOnly("-0.23"),
-                getCheckingAccountEntryAmountOnly("-23.98"),
-                getCheckingAccountEntryAmountOnly("-2359.54"),
-                getCheckingAccountEntryAmountOnly("-5.45")
+                TestUtils.getCheckingAccountEntryAmountOnly("-100.45"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-0.23"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-23.98"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-2359.54"),
+                TestUtils.getCheckingAccountEntryAmountOnly("-5.45")
         );
 
         BigDecimal actual = reportCalculator.getProfit(entries);
@@ -153,9 +154,11 @@ class ReportCalculatorTest {
                 new BigDecimal("4321.23"),
                 new BigDecimal("1834.34")
         );
-        Entry entry = getCheckingAccountEntryAmountAndClientOnly("-69.99", "XX sportsEquipment YY");
+        Entry entry1 = TestUtils.getCheckingAccountEntryAmountAndClientOnly("-69.99", "XX sportsEquipment YY");
+        Entry entry2 = TestUtils.getCheckingAccountEntryAmountAndClientOnly("-112.83", "XX sportsEquipment ZZ");
 
-        reportCalculator.addToCostCentres(monthlyReport, entry);
+        reportCalculator.addToCostCentres(monthlyReport, entry1);
+        reportCalculator.addToCostCentres(monthlyReport, entry2);
 
         assertEquals(1, monthlyReport.getCostCentres().size());
         BigDecimal amount = monthlyReport.getCostCentres().stream()
@@ -163,13 +166,12 @@ class ReportCalculatorTest {
                 .map(CostCentre::getAmount)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Should contain LEISURE_ACTIVITIES_AND_PURCHASES cost centre"));
-        assertEquals(0, new BigDecimal("-69.99").compareTo(amount));
-
+        assertEquals(0, new BigDecimal("-182.82").compareTo(amount));
     }
 
     @Test
     void getCostCentre_positiveAmount_shouldReturnProfit() {
-        CheckingAccountEntry entry = getCheckingAccountEntryAmountOnly("0.01");
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryAmountOnly("0.01");
         CostCentre actual = reportCalculator.getCostCentre(entry);
         assertEquals(CostCentre.Type.PROFIT, actual.getType());
         assertEquals(0, new BigDecimal("0.01").compareTo(actual.getAmount()));
@@ -177,7 +179,7 @@ class ReportCalculatorTest {
 
     @Test
     void getCostCentre_checkingAccountEntryWithAccommodationExpense_shouldReturnAccommodationCostCentre() {
-        CheckingAccountEntry entry = getCheckingAccountEntryAmountAndClientOnly("-10.04", "accommodationId2");
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryAmountAndClientOnly("-10.04", "accommodationId2");
         CostCentre actual = reportCalculator.getCostCentre(entry);
         assertEquals(CostCentre.Type.ACCOMMODATION, actual.getType());
         assertEquals(0, new BigDecimal("-10.04").compareTo(actual.getAmount()));
@@ -193,21 +195,21 @@ class ReportCalculatorTest {
 
     @Test
     void resolveCostCentreType_checkingAccountEntry_matches() {
-        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("this superMarket3, you know");
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryClientOnly("this superMarket3, you know");
         CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
         assertEquals(CostCentre.Type.FOOD, actual);
     }
 
     @Test
     void resolveCostCentreType_checkingAccountEntry_matchesForIntendedUse() {
-        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("doNotUseClientField");
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryClientOnly("doNotUseClientField");
         CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
         assertEquals(CostCentre.Type.HEALTH, actual);
     }
 
     @Test
     void resolveCostCentreType_checkingAccountEntry_doesNotMatch() {
-        CheckingAccountEntry entry = getCheckingAccountEntryClientOnly("somethingCompletelyDifferent");
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryClientOnly("somethingCompletelyDifferent");
         CostCentre.Type actual = reportCalculator.resolveCostCentreType(entry);
         assertEquals(CostCentre.Type.MISCELLANEOUS, actual);
     }
@@ -239,20 +241,4 @@ class ReportCalculatorTest {
         boolean actual = reportCalculator.matchCostCentreCandidate(costCentreCandidates, "somethingCompletelyDifferent");
         assertFalse(actual);
     }
-
-    private CheckingAccountEntry getCheckingAccountEntryClientOnly(String client) {
-        return new CheckingAccountEntry(null, null, null, client,
-                "intendedUse", null, null, null, null, null, null);
-    }
-
-    private CheckingAccountEntry getCheckingAccountEntryAmountOnly(String amount) {
-        return new CheckingAccountEntry(null, null, null, null,
-                "intendedUse", null, null, new BigDecimal(amount), null, null, null);
-    }
-
-    private CheckingAccountEntry getCheckingAccountEntryAmountAndClientOnly(String amount, String client) {
-        return new CheckingAccountEntry(null, null, null, client,
-                "intendedUse", null, null, new BigDecimal(amount), null, null, null);
-    }
-
 }

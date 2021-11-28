@@ -63,8 +63,11 @@ public class MonthlyReport {
     }
 
     public void calcSavingRate() {
-        if (income.compareTo(new BigDecimal("0.00")) != 0) {
-            savingRate = new BigDecimal("100.0000").divide(income, RoundingMode.DOWN).multiply(win);
+        if (income.compareTo(new BigDecimal("0")) != 0) {
+            savingRate = new BigDecimal("100.000000")
+                    .divide(income, RoundingMode.DOWN)
+                    .multiply(win)
+                    .setScale(2, RoundingMode.HALF_UP);
         }
     }
 

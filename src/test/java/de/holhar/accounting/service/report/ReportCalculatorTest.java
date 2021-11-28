@@ -172,9 +172,8 @@ class ReportCalculatorTest {
     @Test
     void getCostCentre_positiveAmount_shouldReturnProfit() {
         CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryAmountOnly("0.01");
-        CostCentre actual = reportCalculator.getCostCentre(entry);
-        assertEquals(CostCentre.Type.PROFIT, actual.getType());
-        assertEquals(0, new BigDecimal("0.01").compareTo(actual.getAmount()));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> reportCalculator.getCostCentre(entry));
+        assertEquals("Given entry amount must below zero (an expenditure), but was 0.01", e.getMessage());
     }
 
     @Test

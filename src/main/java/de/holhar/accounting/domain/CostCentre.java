@@ -11,12 +11,11 @@ public class CostCentre implements Comparable<CostCentre> {
         HEALTH,
         TRANSPORTATION,
         LEISURE_ACTIVITIES_AND_PURCHASES,
-        MISCELLANEOUS,
-        PROFIT
+        MISCELLANEOUS
     }
 
     private final Type type;
-    private BigDecimal amount = new BigDecimal("0.0000");
+    private BigDecimal amount = new BigDecimal("0");
 
     public CostCentre(Type type) {
         this.type = type;

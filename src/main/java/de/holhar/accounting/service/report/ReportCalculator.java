@@ -83,12 +83,9 @@ public class ReportCalculator {
     }
 
     CostCentre getCostCentre(Entry entry) {
-        if (entry.getAmount().compareTo(new BigDecimal("0.000")) > 0) {
-            CostCentre profit = new CostCentre(CostCentre.Type.PROFIT);
-            profit.addAmount(entry.getAmount());
-            return profit;
+        if (entry.getAmount().compareTo(new BigDecimal("0")) > 0) {
+            throw new IllegalArgumentException("Given entry amount must below zero (an expenditure), but was " + entry.getAmount());
         }
-
         CostCentre.Type type;
         if (entry instanceof CheckingAccountEntry) {
             type = resolveCostCentreType((CheckingAccountEntry) entry);

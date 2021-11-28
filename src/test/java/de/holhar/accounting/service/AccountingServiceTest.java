@@ -59,12 +59,11 @@ class AccountingServiceTest {
                 new Balance(new BigDecimal("10000.01"), LocalDate.of(2021, Month.NOVEMBER, 4)),
                 Collections.singletonList(TestUtils.getCheckingAccountEntryAmountAndClientOnly("-10.00", "foobar")));
 
-
         MonthlyReport monthlyReport = new MonthlyReport(
                 "2021_11_CHECKING_ACCOUNT_STATEMENT",
                 LocalDate.of(2021, Month.NOVEMBER, 1),
                 new BigDecimal("4321.23"),
-                new BigDecimal("1834.34")
+                new BigDecimal("-1834.34")
         );
 
         when(sanitationService.cleanUp(any(Path.class))).thenReturn(accountStatementLines);

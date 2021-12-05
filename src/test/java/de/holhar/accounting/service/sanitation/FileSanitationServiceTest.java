@@ -19,7 +19,7 @@ class FileSanitationServiceTest {
     private SanitationService fileSanitationService;
 
     @Test
-    public void cleanUp_accountingStatement_Succeeds() throws IOException {
+    void cleanUp_accountingStatement_Succeeds() throws IOException {
         // Given
         Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/acc_202001.csv");
 
@@ -33,7 +33,7 @@ class FileSanitationServiceTest {
     }
 
     @Test
-    public void cleanUp_creditCardStatement_Succeeds() throws IOException {
+    void cleanUp_creditCardStatement_Succeeds() throws IOException {
         // Given
         Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/cre_202001.csv");
 

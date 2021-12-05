@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-public class CreditCardStatementDeserializerTest {
+class CreditCardStatementDeserializerTest {
 
     @Test
-    public void readStatement() throws IOException {
+    void readStatement() throws IOException {
         // Given
         CreditCardStatementDeserializer deserializer = new CreditCardStatementDeserializer();
         Path path = Paths.get("src/test/resources/accounting/sanitized/cre_202001.csv");

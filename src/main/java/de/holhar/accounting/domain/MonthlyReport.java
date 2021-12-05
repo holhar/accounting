@@ -68,6 +68,8 @@ public class MonthlyReport {
                     .divide(income, RoundingMode.DOWN)
                     .multiply(win)
                     .setScale(2, RoundingMode.HALF_UP);
+        } else {
+            savingRate = new BigDecimal("0");
         }
     }
 

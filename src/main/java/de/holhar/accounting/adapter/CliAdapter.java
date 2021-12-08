@@ -1,5 +1,6 @@
 package de.holhar.accounting.adapter;
 
+import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.domain.AnnualReport;
 import de.holhar.accounting.domain.MonthlyReport;
 import de.holhar.accounting.service.AccountingService;
@@ -7,8 +8,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -26,28 +27,32 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-@Profile("cli")
 @Component
 public class CliAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(CliAdapter.class);
 
     private final AccountingService accountingService;
+    private final String defaultCsvPath;
     private final DecimalFormat df;
 
-    public CliAdapter(AccountingService accountingService) {
+    public CliAdapter(AccountingService accountingService, AppProperties appProperties) {
         this.accountingService = accountingService;
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator(',');
         df = new DecimalFormat("0.00", symbols);
+
+        this.defaultCsvPath = appProperties.getCsvPath();
     }
 
     public void startApplication() {
         Scanner scanner = new Scanner(System.in);
         try {
-            logger.info("Provide absolute path to csv files to scan:");
-            Path csvPath = Paths.get(scanner.nextLine());
+            logger.info("Provide absolute path to csv files to scan (or leave blank to use default path '{}'):", defaultCsvPath);
+            String csvPathString = scanner.nextLine();
+            csvPathString = StringUtils.hasLength(csvPathString) ? csvPathString : defaultCsvPath;
+            Path csvPath = Paths.get(csvPathString);
             if (!Files.isDirectory(csvPath) || !csvPath.isAbsolute()) {
                 throw new IllegalArgumentException("Provided path must be absolute and must be a directory");
             }

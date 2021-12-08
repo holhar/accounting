@@ -20,14 +20,12 @@ public class MonthlyReport {
 
     protected final Set<CostCentre> costCentres = new TreeSet<>();
 
-    public MonthlyReport(String friendlyName, LocalDate date, BigDecimal income, BigDecimal expenditure) {
+    public MonthlyReport(String friendlyName, LocalDate date) {
         this.friendlyName = friendlyName;
         this.month = date.getMonth();
         this.year = date.getYear();
-        this.income = income;
-        this.expenditure = expenditure;
-        calcWin();
-        calcSavingRate();
+        this.income = new BigDecimal("0");
+        this.expenditure = new BigDecimal("0");
     }
 
     public String getFriendlyName() {
@@ -46,8 +44,16 @@ public class MonthlyReport {
         return income;
     }
 
+    public void setIncome(BigDecimal income) {
+        this.income = income;
+    }
+
     public BigDecimal getExpenditure() {
         return expenditure;
+    }
+
+    public void setExpenditure(BigDecimal expenditure) {
+        this.expenditure = expenditure;
     }
 
     public BigDecimal getWin() {
@@ -58,11 +64,8 @@ public class MonthlyReport {
         return savingRate;
     }
 
-    public void calcWin() {
+    public void calcWinAndSavingRate() {
         win = income.add(expenditure);
-    }
-
-    public void calcSavingRate() {
         if (income.compareTo(new BigDecimal("0")) != 0) {
             savingRate = new BigDecimal("100.000000")
                     .divide(income, RoundingMode.DOWN)

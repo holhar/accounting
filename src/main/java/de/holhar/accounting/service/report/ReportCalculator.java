@@ -44,29 +44,32 @@ public class ReportCalculator {
     }
 
     /**
-     * Determines if a given checking account statement represents a transfer to an account belonging to the owner or
-     * not. It does this by comparing the client of the statement to a configured list of own accounts or credit cards.
+     * Determines if a given entry represents a transfer to an account belonging to the owner or not. It does this by
+     * comparing the client/description of the statement to a configured list of own accounts or credit cards.
      */
     public boolean isNotOwnTransfer(Entry entry) {
-        if (entry instanceof CreditCardEntry) {
-            throw new IllegalArgumentException("CreditCardEntry not applicable for isNotOwnTransfer calculation");
+        if (entry instanceof CheckingAccountEntry) {
+            final String client = ((CheckingAccountEntry) entry).getClient();
+            return ownTransferIdentifiers.stream().noneMatch(client::equalsIgnoreCase);
+        } else if (entry instanceof CreditCardEntry) {
+            final String description = ((CreditCardEntry) entry).getDescription();
+            return ownTransferIdentifiers.stream().noneMatch(description::equalsIgnoreCase);
+        } else {
+            throw new IllegalArgumentException("Given type of entry must be either CreditCard- or CheckingAccountEntry");
         }
-        final String client = ((CheckingAccountEntry) entry).getClient();
-        return ownTransferIdentifiers.stream().noneMatch(client::equalsIgnoreCase);
     }
 
-    public BigDecimal getExpenditure(List<Entry> statementEntries) {
-        return statementEntries.stream()
-                .map(Entry::getAmount)
-                .filter(amount -> amount.intValue() < 0)
+    public BigDecimal getExpenditure(MonthlyReport monthlyReport) {
+        return monthlyReport.getCostCentres().stream()
+                .map(CostCentre::getAmount)
                 .reduce(new BigDecimal("0"), BigDecimal::add);
     }
 
-    public BigDecimal getProfit(List<Entry> statementEntries) {
-        return statementEntries.stream()
-                .map(Entry::getAmount)
-                .filter(amount -> amount.intValue() > 0)
-                .reduce(new BigDecimal("0"), BigDecimal::add);
+    public BigDecimal getProfit(MonthlyReport monthlyReport, Entry entry) {
+        if (entry.getAmount().compareTo(new BigDecimal("0")) <= 0) {
+            throw new IllegalArgumentException("Given entry amount must be above zero (a profit), but was " + entry.getAmount());
+        }
+        return monthlyReport.getIncome().add(entry.getAmount());
     }
 
     public void addToCostCentres(MonthlyReport monthlyReport, Entry entry) {
@@ -83,8 +86,8 @@ public class ReportCalculator {
     }
 
     CostCentre getCostCentre(Entry entry) {
-        if (entry.getAmount().compareTo(new BigDecimal("0")) > 0) {
-            throw new IllegalArgumentException("Given entry amount must below zero (an expenditure), but was " + entry.getAmount());
+        if (entry.getAmount().compareTo(new BigDecimal("0")) >= 0) {
+            throw new IllegalArgumentException("Given entry amount must be below zero (an expenditure), but was " + entry.getAmount());
         }
         CostCentre.Type type;
         if (entry instanceof CheckingAccountEntry) {

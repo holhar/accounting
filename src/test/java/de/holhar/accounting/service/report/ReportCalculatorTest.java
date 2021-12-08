@@ -52,108 +52,95 @@ class ReportCalculatorTest {
     }
 
     @Test
-    void isNotOwnTransfer_givenCheckingAccountEntryIsOwnAccount_shouldReturnTrue() {
+    void isNotOwnTransfer_givenCheckingAccountEntryIsOwnAccount_shouldReturnFalse() {
         Entry entry = TestUtils.getCheckingAccountEntryClientOnly("Own Account one");
         boolean actual = reportCalculator.isNotOwnTransfer(entry);
         assertFalse(actual);
     }
 
     @Test
-    void isNotOwnTransfer_givenCheckingAccountEntryIsNOTOwnAccount_shouldReturnFalse() {
+    void isNotOwnTransfer_givenCheckingAccountEntryIsNOTOwnAccount_shouldReturnTrue() {
         Entry entry = TestUtils.getCheckingAccountEntryClientOnly("Different account");
         boolean actual = reportCalculator.isNotOwnTransfer(entry);
         assertTrue(actual);
     }
 
     @Test
-    void isNotOwnTransfer_givenCreditCardAccountEntryIsOwnAccount_shouldThrowException() {
-        Entry entry = new CreditCardEntry(false, null, null, null, null, null);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> reportCalculator.isNotOwnTransfer(entry));
-        assertEquals("CreditCardEntry not applicable for isNotOwnTransfer calculation", e.getMessage());
+    void isNotOwnTransfer_givenCreditCardAccountEntryIsOwnAccount_shouldReturnFalse() {
+        Entry entry = new CreditCardEntry(false, null, null, "Own Account one", null, null);
+        boolean actual = reportCalculator.isNotOwnTransfer(entry);
+        assertFalse(actual);
     }
 
     @Test
-    void getExpenditure_negativeAndPositiveEntries_shouldOnlyAddNegativeEntries() {
-        List<Entry> entries = Arrays.asList(
-                TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-100.82"),
-                TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
-                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-1084.21")
-        );
+    void isNotOwnTransfer_givenCreditCardAccountEntryIsNOTOwnAccount_shouldReturnTrue() {
+        Entry entry = new CreditCardEntry(false, null, null, "Different account", null, null);
+        boolean actual = reportCalculator.isNotOwnTransfer(entry);
+        assertTrue(actual);
+    }
 
-        BigDecimal actual = reportCalculator.getExpenditure(entries);
+    @Test
+    void getExpenditure_monthlyReportWithCostCentresGiven_shouldSumUpExpenditures() {
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.NOVEMBER, 1)
+        );
+        monthlyReport.setIncome(new BigDecimal("4321.23"));
+        monthlyReport.setExpenditure(new BigDecimal("-1834.34"));
+
+        CostCentre costCentre1 = new CostCentre(CostCentre.Type.FOOD);
+        costCentre1.addAmount(new BigDecimal("-100.82"));
+        monthlyReport.getCostCentres().add(costCentre1);
+        CostCentre costCentre2 = new CostCentre(CostCentre.Type.ACCOMMODATION);
+        costCentre2.addAmount(new BigDecimal("-1084.21"));
+        monthlyReport.getCostCentres().add(costCentre2);
+
+        BigDecimal actual = reportCalculator.getExpenditure(monthlyReport);
 
         assertEquals(new BigDecimal("-1185.03"), actual);
     }
 
     @Test
-    void getExpenditures_positiveEntriesOnly_shouldResultInZeroExpenditures() {
+    void getProfit_positiveEntries_shoulAddPositiveEntries() {
         List<Entry> entries = Arrays.asList(
                 TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
-                TestUtils.getCheckingAccountEntryAmountOnly("0.23"),
                 TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
-                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
-                TestUtils.getCheckingAccountEntryAmountOnly("5.45")
+                TestUtils.getCheckingAccountEntryAmountOnly("2359.54")
         );
 
-        BigDecimal actual = reportCalculator.getExpenditure(entries);
-
-        assertEquals(new BigDecimal("0"), actual);
-    }
-
-    @Test
-    void getExpenditures_emptyEntriesList_shouldResultInZeroExpenditures() {
-        List<Entry> entries = Collections.emptyList();
-        BigDecimal actual = reportCalculator.getExpenditure(entries);
-        assertEquals(new BigDecimal("0"), actual);
-    }
-
-    @Test
-    void getProfit_negativeAndPositiveEntries_shouldOnlyAddPositiveEntries() {
-        List<Entry> entries = Arrays.asList(
-                TestUtils.getCheckingAccountEntryAmountOnly("100.45"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-100.82"),
-                TestUtils.getCheckingAccountEntryAmountOnly("23.98"),
-                TestUtils.getCheckingAccountEntryAmountOnly("2359.54"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-1084.21")
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.NOVEMBER, 1)
         );
 
-        BigDecimal actual = reportCalculator.getProfit(entries);
+        monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entries.get(0)));
+        monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entries.get(1)));
+        monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entries.get(2)));
 
-        assertEquals(new BigDecimal("2483.97"), actual);
+        assertEquals(new BigDecimal("2483.97"), monthlyReport.getIncome());
     }
 
     @Test
-    void getProfit_positiveEntriesOnly_shouldResultInZeroProfit() {
-        List<Entry> entries = Arrays.asList(
-                TestUtils.getCheckingAccountEntryAmountOnly("-100.45"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-0.23"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-23.98"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-2359.54"),
-                TestUtils.getCheckingAccountEntryAmountOnly("-5.45")
+    void getProfit_negativeEntry_shouldThrowException() {
+        CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryAmountOnly("-100.45");
+
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.NOVEMBER, 1)
         );
 
-        BigDecimal actual = reportCalculator.getProfit(entries);
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> reportCalculator.getProfit(monthlyReport, entry));
 
-        assertEquals(new BigDecimal("0"), actual);
-    }
-
-    @Test
-    void getProfit_emptyEntriesList_shouldResultInZeroProfit() {
-        List<Entry> entries = Collections.emptyList();
-        BigDecimal actual = reportCalculator.getProfit(entries);
-        assertEquals(new BigDecimal("0"), actual);
+        assertEquals("Given entry amount must be above zero (a profit), but was -100.45", e.getMessage());
     }
 
     @Test
     void addToCostCentres() {
         MonthlyReport monthlyReport = new MonthlyReport(
                 "2021_11_CHECKING_ACCOUNT_STATEMENT",
-                LocalDate.of(2021, Month.NOVEMBER, 1),
-                new BigDecimal("4321.23"),
-                new BigDecimal("1834.34")
+                LocalDate.of(2021, Month.NOVEMBER, 1)
         );
+
         Entry entry1 = TestUtils.getCheckingAccountEntryAmountAndClientOnly("-69.99", "XX sportsEquipment YY");
         Entry entry2 = TestUtils.getCheckingAccountEntryAmountAndClientOnly("-112.83", "XX sportsEquipment ZZ");
 
@@ -173,7 +160,7 @@ class ReportCalculatorTest {
     void getCostCentre_positiveAmount_shouldReturnProfit() {
         CheckingAccountEntry entry = TestUtils.getCheckingAccountEntryAmountOnly("0.01");
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> reportCalculator.getCostCentre(entry));
-        assertEquals("Given entry amount must below zero (an expenditure), but was 0.01", e.getMessage());
+        assertEquals("Given entry amount must be below zero (an expenditure), but was 0.01", e.getMessage());
     }
 
     @Test

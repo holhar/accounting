@@ -20,12 +20,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
@@ -46,7 +41,6 @@ class AccountingServiceTest {
     @Mock
     private ReportManager reportManager;
 
-    // TODO Improve test
     @Test
     void createReport() throws IOException {
         List<String> accountStatementLines = Collections.singletonList("AccountStatement");
@@ -61,10 +55,10 @@ class AccountingServiceTest {
 
         MonthlyReport monthlyReport = new MonthlyReport(
                 "2021_11_CHECKING_ACCOUNT_STATEMENT",
-                LocalDate.of(2021, Month.NOVEMBER, 1),
-                new BigDecimal("4321.23"),
-                new BigDecimal("-1834.34")
+                LocalDate.of(2021, Month.NOVEMBER, 1)
         );
+        monthlyReport.setIncome(new BigDecimal("4321.23"));
+        monthlyReport.setExpenditure(new BigDecimal("-1834.34"));
 
         when(sanitationService.cleanUp(any(Path.class))).thenReturn(accountStatementLines);
         when(deserializer.readStatement(accountStatementLines)).thenReturn(accountStatement);

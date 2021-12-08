@@ -68,10 +68,10 @@ class AccountStatementReportManagerTest {
         statementSet.add(creditCardStatement);
 
         BigDecimal expenditure = new BigDecimal("-908.41");
-        when(reportCalculator.getExpenditure(checkingAccountStatement.getEntries())).thenReturn(expenditure);
+        when(reportCalculator.getExpenditure(any(MonthlyReport.class))).thenReturn(expenditure);
 
-        BigDecimal profit = new BigDecimal("2400.15");
-        when(reportCalculator.getProfit(checkingAccountStatement.getEntries())).thenReturn(profit);
+        BigDecimal profit = new BigDecimal("252.15");
+        when(reportCalculator.getProfit(any(MonthlyReport.class), any(Entry.class))).thenReturn(profit);
 
         when(reportCalculator.isNotOwnTransfer(any(Entry.class))).thenReturn(true);
 
@@ -79,6 +79,8 @@ class AccountStatementReportManagerTest {
 
         // 6 invokes of 'addToCostCentres' out of 8 entries minus 2 income entries
         verify(reportCalculator, times(6)).addToCostCentres(any(MonthlyReport.class), any(Entry.class));
+        // 2 invokes of 'getProfit' out of 8 entries minus 6 expenditure entries
+        verify(reportCalculator, times(2)).getProfit(any(MonthlyReport.class), any(Entry.class));
         assertEquals("2021_11_CHECKING_ACCOUNT", monthlyReport.getFriendlyName());
         assertEquals(Month.NOVEMBER, monthlyReport.getMonth());
         assertEquals(2021, monthlyReport.getYear());

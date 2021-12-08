@@ -2,6 +2,7 @@ package de.holhar.accounting.adapter;
 
 import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.domain.AnnualReport;
+import de.holhar.accounting.domain.CostCentre;
 import de.holhar.accounting.domain.MonthlyReport;
 import de.holhar.accounting.service.AccountingService;
 import org.apache.commons.csv.CSVFormat;
@@ -24,8 +25,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class CliAdapter {
@@ -75,7 +78,8 @@ public class CliAdapter {
         Path reportFile = csvPath.getParent().resolve(Paths.get(fileName));
         try (BufferedWriter writer = Files.newBufferedWriter(reportFile);
              CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                     .withHeader("ID", "Year", "Month", "Income", "Expenditure", "Win", "SavingRate"))
+                     .withHeader("ID", "Year", "Month", "Income", "Expenditure", "Win", "SavingRate", "####",
+                             "Accommodation", "Food", "Health", "Transportation", "Leisure", "Misc"))
         ) {
             List<AnnualReport> annualReportList = new ArrayList<>();
             for (Map.Entry<Integer, Set<MonthlyReport>> entry : monthlyReportsPerYear.entrySet()) {
@@ -91,7 +95,7 @@ public class CliAdapter {
                 String expenditureString = df.format(a.getExpenditure());
                 String winString = df.format(a.getWin());
                 String savingRateString = df.format(a.getSavingRate());
-                csvPrinter.printRecord(a.getFriendlyName(), a.getYear(), "--", incomeString, expenditureString, winString, savingRateString);
+                csvPrinter.printRecord(a.getFriendlyName(), a.getYear(), "----", incomeString, expenditureString, winString, savingRateString);
             }
             csvPrinter.flush();
         }
@@ -103,8 +107,36 @@ public class CliAdapter {
             String expenditureString = df.format(r.getExpenditure());
             String varString = df.format(r.getWin());
             String savingRateString = df.format(r.getSavingRate());
-            csvPrinter.printRecord(r.getFriendlyName(), r.getYear(), r.getMonth(), incomeString, expenditureString, varString, savingRateString);
+            Map<CostCentre.Type, List<CostCentre>> cMap = getCostCentresAsMap(r.getCostCentres());
+            csvPrinter.printRecord(
+                    r.getFriendlyName(),
+                    r.getYear(),
+                    r.getMonth(),
+                    incomeString,
+                    expenditureString,
+                    varString,
+                    savingRateString,
+                    "----",
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.ACCOMMODATION),
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.FOOD),
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.HEALTH),
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.TRANSPORTATION),
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.LEISURE_ACTIVITIES_AND_PURCHASES),
+                    getCostCentreAmountFormatted(cMap, CostCentre.Type.MISCELLANEOUS)
+            );
             annualReport.addProfitAndExpenses(r.getIncome(), r.getExpenditure());
         }
+    }
+
+    private Map<CostCentre.Type, List<CostCentre>> getCostCentresAsMap(Set<CostCentre> costCentres) {
+         return costCentres.stream().collect(Collectors.groupingBy(CostCentre::getType));
+    }
+
+    private String getCostCentreAmountFormatted(Map<CostCentre.Type, List<CostCentre>> cMap, CostCentre.Type type) {
+        if (cMap.get(type) != null) {
+            BigDecimal amount = Optional.ofNullable(cMap.get(type).get(0)).orElse(new CostCentre(type)).getAmount();
+            return df.format(amount);
+        }
+        return "0";
     }
 }

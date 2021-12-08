@@ -9,20 +9,13 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
-    private boolean readStatementsEnabled;
     private String csvPath;
+    private String checkingAccountIdentifier;
+    private String creditCardIdentifier;
     private List<String> ownTransferIdentifiers;
     private List<String> intendedUseIdentifiers;
 
     private Expense expense = new Expense();
-
-    public boolean isReadStatementsEnabled() {
-        return readStatementsEnabled;
-    }
-
-    public void setReadStatementsEnabled(boolean readStatementsEnabled) {
-        this.readStatementsEnabled = readStatementsEnabled;
-    }
 
     public String getCsvPath() {
         return csvPath;
@@ -30,6 +23,22 @@ public class AppProperties {
 
     public void setCsvPath(String csvPath) {
         this.csvPath = csvPath;
+    }
+
+    public String getCheckingAccountIdentifier() {
+        return checkingAccountIdentifier;
+    }
+
+    public void setCheckingAccountIdentifier(String checkingAccountIdentifier) {
+        this.checkingAccountIdentifier = checkingAccountIdentifier;
+    }
+
+    public String getCreditCardIdentifier() {
+        return creditCardIdentifier;
+    }
+
+    public void setCreditCardIdentifier(String creditCardIdentifier) {
+        this.creditCardIdentifier = creditCardIdentifier;
     }
 
     public Expense getExpense() {

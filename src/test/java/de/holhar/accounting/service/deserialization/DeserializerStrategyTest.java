@@ -1,10 +1,13 @@
 package de.holhar.accounting.service.deserialization;
 
+import de.holhar.accounting.config.AppProperties;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +28,15 @@ class DeserializerStrategyTest {
     @Mock
     private AccountStatementDeserializer accountStatementDeserializer;
 
+    @Mock
+    private AppProperties appProperties;
+
+    @BeforeEach
+    public void init() {
+        ReflectionTestUtils.setField(deserializerStrategy, "checkingAccountIdentifier", "CheckingAccount");
+        ReflectionTestUtils.setField(deserializerStrategy, "creditCardIdentifier", "CreditCard");
+    }
+
     @Test
     void readStatement_emptyLines_shouldThrowException() {
         List<String> lines = Collections.emptyList();
@@ -35,14 +47,14 @@ class DeserializerStrategyTest {
 
     @Test
     void readStatement_checkingAccountLines_shouldExecuteCreditCardStatementDeserializer() {
-        List<String> lines = Collections.singletonList("Kreditkarte XYZ");
+        List<String> lines = Collections.singletonList("CreditCard XYZ");
         deserializerStrategy.readStatement(lines);
         verify(creditCardStatementDeserializer).readStatement(lines);
     }
 
     @Test
     void readStatement_checkingAccountLines_shouldExecuteAccountStatementDeserializer() {
-        List<String> lines = Collections.singletonList("Kontonummer XYZ");
+        List<String> lines = Collections.singletonList("CheckingAccount XYZ");
         deserializerStrategy.readStatement(lines);
         verify(accountStatementDeserializer).readStatement(lines);
     }

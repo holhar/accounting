@@ -12,10 +12,7 @@ public class AppProperties {
     private String csvPath;
     private String checkingAccountIdentifier;
     private String creditCardIdentifier;
-    private List<String> ownTransferIdentifiers;
     private List<String> intendedUseIdentifiers;
-
-    private Expense expense = new Expense();
 
     public String getCsvPath() {
         return csvPath;
@@ -39,22 +36,6 @@ public class AppProperties {
 
     public void setCreditCardIdentifier(String creditCardIdentifier) {
         this.creditCardIdentifier = creditCardIdentifier;
-    }
-
-    public Expense getExpense() {
-        return expense;
-    }
-
-    public void setExpense(Expense expense) {
-        this.expense = expense;
-    }
-
-    public List<String> getOwnTransferIdentifiers() {
-        return ownTransferIdentifiers;
-    }
-
-    public void setOwnTransferIdentifiers(List<String> ownTransferIdentifiers) {
-        this.ownTransferIdentifiers = ownTransferIdentifiers;
     }
 
     public List<String> getIntendedUseIdentifiers() {

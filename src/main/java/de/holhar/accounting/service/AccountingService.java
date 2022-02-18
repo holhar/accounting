@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -32,7 +34,7 @@ public class AccountingService {
         this.reportManager = reportManager;
     }
 
-    public Map<Integer, Set<MonthlyReport>> createReport(Path csvPath) throws IOException {
+    public Map<Integer, List<MonthlyReport>> createReport(Path csvPath) throws IOException {
         Map<LocalDate, Set<AccountStatement>> accountingStatementsPerMonthMap;
         try (Stream<Path> pathStream = Files.list(csvPath)) {
             accountingStatementsPerMonthMap = pathStream.parallel()
@@ -40,8 +42,13 @@ public class AccountingService {
                     .map(deserializer::readStatement)
                     .collect(Collectors.groupingBy(AccountStatement::getFrom, TreeMap::new, Collectors.toSet()));
         }
-        return accountingStatementsPerMonthMap.entrySet().stream()
+        TreeMap<Integer, List<MonthlyReport>> monthlyReportPerYear = accountingStatementsPerMonthMap.entrySet().stream()
                 .map(entry -> reportManager.createMonthlyReport(entry.getKey(), entry.getValue()))
-                .collect(Collectors.groupingBy(MonthlyReport::getYear, TreeMap::new, Collectors.toSet()));
+                .collect(Collectors.groupingBy(MonthlyReport::getYear, TreeMap::new, Collectors.toList()));
+
+        for (List<MonthlyReport> reportList : monthlyReportPerYear.values()) {
+            Collections.sort(reportList);
+        }
+        return monthlyReportPerYear;
     }
 }

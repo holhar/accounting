@@ -5,24 +5,15 @@ import java.util.Objects;
 
 public class CostCentre implements Comparable<CostCentre> {
 
-    public enum Type {
-        ACCOMMODATION,
-        FOOD,
-        HEALTH,
-        TRANSPORTATION,
-        LEISURE_ACTIVITIES_AND_PURCHASES,
-        MISCELLANEOUS
-    }
-
-    private final Type type;
+    private final EntryType entryType;
     private BigDecimal amount = new BigDecimal("0");
 
-    public CostCentre(Type type) {
-        this.type = type;
+    public CostCentre(EntryType entryType) {
+        this.entryType = entryType;
     }
 
-    public Type getType() {
-        return type;
+    public EntryType getEntryType() {
+        return entryType;
     }
 
     public BigDecimal getAmount() {
@@ -38,16 +29,16 @@ public class CostCentre implements Comparable<CostCentre> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CostCentre that = (CostCentre) o;
-        return type == that.type;
+        return entryType == that.entryType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return Objects.hash(entryType);
     }
 
     @Override
     public int compareTo(CostCentre c) {
-        return this.type.toString().compareTo(c.type.toString());
+        return this.entryType.toString().compareTo(c.entryType.toString());
     }
 }

@@ -23,10 +23,12 @@ public class FileSanitationService implements SanitationService {
         try {
             return Files.readAllLines(path, StandardCharsets.ISO_8859_1)
                     .stream()
-                    .filter(StringUtils::hasText)
                     .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8))
-                    .map(line -> line.replaceAll("\"", ""))
+                    .map(line -> line.replace("\"", ""))
                     .map(line -> line.replaceAll("\\s\\s+", " "))
+                    .map(line -> line.replaceAll("^;;+$", ";"))
+                    .map(line -> line.replaceAll(";$", ""))
+                    .filter(StringUtils::hasText)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             LOGGER.error("Could not sanitize file under path '{}'", path, e);

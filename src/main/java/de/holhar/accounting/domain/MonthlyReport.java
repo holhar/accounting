@@ -4,10 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MonthlyReport {
+public class MonthlyReport implements Comparable<MonthlyReport> {
 
     protected final String friendlyName;
     protected final int year;
@@ -92,5 +93,23 @@ public class MonthlyReport {
                 ", win=" + win +
                 ", savingRate=" + savingRate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MonthlyReport that = (MonthlyReport) o;
+        return year == that.year && month == that.month;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(year, month);
+    }
+
+    @Override
+    public int compareTo(MonthlyReport other) {
+        return this.month.getValue() - other.getMonth().getValue();
     }
 }

@@ -16,11 +16,11 @@ public class DeserializerStrategy implements Deserializer {
     private final CreditCardStatementDeserializer creditCardStatementDeserializer;
 
     @Autowired
-    public DeserializerStrategy(AppProperties appProperties,
+    public DeserializerStrategy(AppProperties properties,
                                 AccountStatementDeserializer accountStatementDeserializer,
                                 CreditCardStatementDeserializer creditCardStatementDeserializer) {
-        this.checkingAccountIdentifier = appProperties.getCheckingAccountIdentifier();
-        this.creditCardIdentifier = appProperties.getCreditCardIdentifier();
+        this.checkingAccountIdentifier = properties.getCheckingAccountIdentifier();
+        this.creditCardIdentifier = properties.getCreditCardIdentifier();
         this.accountStatementDeserializer = accountStatementDeserializer;
         this.creditCardStatementDeserializer = creditCardStatementDeserializer;
     }

@@ -2,6 +2,7 @@ package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.CheckingAccountEntry;
+import de.holhar.accounting.domain.EntryType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -51,6 +52,7 @@ class AccountStatementDeserializerTest {
         assertTrue(firstEntry.getCreditorId().isBlank());
         assertTrue(firstEntry.getClientReference().isBlank());
         assertEquals("NOTPROVIDED", firstEntry.getCustomerReference());
+        assertEquals(EntryType.INNER_ACCOUNT_TRANSFER, firstEntry.getType());
 
         CheckingAccountEntry lastEntry = (CheckingAccountEntry) accountStatement.getEntries().get(30);
         assertEquals(LocalDate.parse("2020-01-02"), lastEntry.getBookingDate());
@@ -64,6 +66,7 @@ class AccountStatementDeserializerTest {
         assertEquals("DA55555555557777778", lastEntry.getCreditorId());
         assertEquals("0001-900000000000", lastEntry.getClientReference());
         assertTrue(lastEntry.getCustomerReference().isBlank());
+        assertEquals(EntryType.FOOD_AND_DRUGSTORE, lastEntry.getType());
     }
 
 }

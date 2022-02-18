@@ -16,10 +16,11 @@ public class CheckingAccountEntry implements Entry {
     private final String creditorId;
     private final String clientReference;
     private final String customerReference;
+    private final EntryType type;
 
     public CheckingAccountEntry(LocalDate bookingDate, LocalDate valueDate, String bookingText, String client, String intendedUse,
                                 String accountId, String bankCode, BigDecimal amount, String creditorId, String clientReference,
-                                String customerReference) {
+                                String customerReference, EntryType type) {
         this.bookingDate = bookingDate;
         this.valueDate = valueDate;
         this.bookingText = bookingText;
@@ -31,6 +32,7 @@ public class CheckingAccountEntry implements Entry {
         this.creditorId = creditorId;
         this.clientReference = clientReference;
         this.customerReference = customerReference;
+        this.type = type;
     }
 
     public LocalDate getBookingDate() {
@@ -61,6 +63,7 @@ public class CheckingAccountEntry implements Entry {
         return bankCode;
     }
 
+    @Override
     public BigDecimal getAmount() {
         return amount;
     }
@@ -75,5 +78,10 @@ public class CheckingAccountEntry implements Entry {
 
     public String getCustomerReference() {
         return customerReference;
+    }
+
+    @Override
+    public EntryType getType() {
+        return type;
     }
 }

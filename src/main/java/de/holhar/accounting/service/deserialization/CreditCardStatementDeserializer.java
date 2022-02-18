@@ -5,6 +5,7 @@ import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Balance;
 import de.holhar.accounting.domain.CreditCardEntry;
 import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.domain.EntryType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -57,7 +58,8 @@ public class CreditCardStatementDeserializer extends AbstractStatementDeserializ
         LocalDate receiptDate = LocalDate.parse(entryFields.pop(), formatter);
         String description = entryFields.pop();
         String amountString = entryFields.pop().replace(".", "").replace(",", ".").trim();
-        String originalAmountString = entryFields.isEmpty()
+        EntryType type = EntryType.fromValue(entryFields.getLast().isBlank() ? "" : entryFields.removeLast().trim());
+        String originalAmountString = entryFields.isEmpty() || entryFields.peek().isBlank()
                 ? "0"
                 : entryFields.pop()
                 .replace(".", "")
@@ -65,7 +67,16 @@ public class CreditCardStatementDeserializer extends AbstractStatementDeserializ
                 .replace("USD", "")
                 .trim();
 
-        return new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate, description,
-                new BigDecimal(amountString), new BigDecimal(originalAmountString));
+
+        CreditCardEntry entry = new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate, description,
+                new BigDecimal(amountString), new BigDecimal(originalAmountString), type);
+
+        if ((entry.isExpenditure() && entry.hasPositiveAmount())
+                || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
+            String errMsg = String.format("Entry '%s' is invalid: type '%s', amount 's'", entry.getDescription(),
+                    entry.getType().getValue(), entry.getAmount());
+            throw new IllegalStateException(errMsg);
+        }
+        return entry;
     }
 }

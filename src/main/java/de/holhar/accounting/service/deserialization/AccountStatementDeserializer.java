@@ -5,6 +5,7 @@ import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Balance;
 import de.holhar.accounting.domain.CheckingAccountEntry;
 import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.domain.EntryType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -97,7 +98,16 @@ public class AccountStatementDeserializer extends AbstractStatementDeserializer 
         String creditorId = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String clientReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
         String customerReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
-        return new CheckingAccountEntry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
-                new BigDecimal(amountString), creditorId, clientReference, customerReference);
+        EntryType type = EntryType.fromValue(entryFields.getLast().isBlank() ? "" : entryFields.removeLast().trim());
+        CheckingAccountEntry entry = new CheckingAccountEntry(bookingDate, valueDate, bookingText, client, intendedUse, accountId, bankCode,
+                new BigDecimal(amountString), creditorId, clientReference, customerReference, type);
+
+        if ((entry.isExpenditure() && entry.hasPositiveAmount())
+                || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
+            String errMsg = String.format("Entry '%s' is invalid: type '%s', amount 's'", entry.getBookingText(),
+                    entry.getType().getValue(), entry.getAmount());
+            throw new IllegalStateException(errMsg);
+        }
+        return entry;
     }
 }

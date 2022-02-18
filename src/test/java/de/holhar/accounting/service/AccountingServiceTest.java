@@ -3,6 +3,7 @@ package de.holhar.accounting.service;
 import de.holhar.accounting.TestUtils;
 import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Balance;
+import de.holhar.accounting.domain.EntryType;
 import de.holhar.accounting.domain.MonthlyReport;
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.report.ReportManager;
@@ -51,7 +52,7 @@ class AccountingServiceTest {
                 LocalDate.of(2021, Month.NOVEMBER, 4),
                 LocalDate.of(2021, Month.DECEMBER, 3),
                 new Balance(new BigDecimal("10000.01"), LocalDate.of(2021, Month.NOVEMBER, 4)),
-                Collections.singletonList(TestUtils.getCheckingAccountEntryAmountAndClientOnly("-10.00", "foobar")));
+                Collections.singletonList(TestUtils.getCheckingAccountEntryAmountAndClientOnly("-10.00", "foobar", EntryType.FOOD_AND_DRUGSTORE)));
 
         MonthlyReport monthlyReport = new MonthlyReport(
                 "2021_11_CHECKING_ACCOUNT_STATEMENT",

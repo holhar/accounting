@@ -2,6 +2,7 @@ package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.CreditCardEntry;
+import de.holhar.accounting.domain.EntryType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -46,6 +47,7 @@ class CreditCardStatementDeserializerTest {
         assertEquals("FOOBAR.COM 7899877898Somewhere", firstEntry.getDescription());
         assertEquals(new BigDecimal("-12.72"), firstEntry.getAmount());
         assertEquals(new BigDecimal("-14.99"), firstEntry.getOriginalAmount());
+        assertEquals(EntryType.FOOD_AND_DRUGSTORE, firstEntry.getType());
 
         CreditCardEntry lastEntry = (CreditCardEntry) accountStatement.getEntries().get(32);
         assertTrue(lastEntry.isBilledAndNotIncluded());
@@ -54,5 +56,6 @@ class CreditCardStatementDeserializerTest {
         assertEquals("Einzahlung", lastEntry.getDescription());
         assertEquals(new BigDecimal("150.00"), lastEntry.getAmount());
         assertEquals(new BigDecimal("0"), lastEntry.getOriginalAmount());
+        assertEquals(EntryType.INNER_ACCOUNT_TRANSFER, lastEntry.getType());
     }
 }

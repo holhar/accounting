@@ -14,15 +14,17 @@ public class CreditCardEntry implements Entry {
     private final String description;
     private final BigDecimal amount;
     private final BigDecimal originalAmount;
+    private final EntryType type;
 
     public CreditCardEntry(boolean billedAndNotIncluded, LocalDate valueDate, LocalDate receiptDate,
-                           String description, BigDecimal amount, BigDecimal originalAmount) {
+                           String description, BigDecimal amount, BigDecimal originalAmount, EntryType type) {
         this.billedAndNotIncluded = billedAndNotIncluded;
         this.valueDate = valueDate;
         this.receiptDate = receiptDate;
         this.description = description;
         this.amount = amount;
         this.originalAmount = originalAmount;
+        this.type = type;
     }
 
     public boolean isBilledAndNotIncluded() {
@@ -41,11 +43,17 @@ public class CreditCardEntry implements Entry {
         return description;
     }
 
+    @Override
     public BigDecimal getAmount() {
         return amount;
     }
 
     public BigDecimal getOriginalAmount() {
         return originalAmount;
+    }
+
+    @Override
+    public EntryType getType() {
+        return type;
     }
 }

@@ -4,8 +4,6 @@ import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Entry;
 import de.holhar.accounting.domain.EntryType;
 import de.holhar.accounting.domain.MonthlyReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -14,8 +12,6 @@ import java.util.Set;
 
 @Component
 public class AccountStatementReportManager implements ReportManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountStatementReportManager.class);
 
     private final ReportCalculator reportCalculator;
 

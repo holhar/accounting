@@ -50,6 +50,7 @@ public class AccountStatementReportManager implements ReportManager {
 
         calculateAllCosts(checkingAccountStatement, creditCardStatement, monthlyReport);
         calculateOverallProfit(checkingAccountStatement, creditCardStatement, monthlyReport);
+        calculateOverallInvestments(checkingAccountStatement, monthlyReport);
         monthlyReport.setExpenditure(reportCalculator.getExpenditure(monthlyReport));
         monthlyReport.calcWinAndSavingRate();
 
@@ -74,5 +75,11 @@ public class AccountStatementReportManager implements ReportManager {
         creditCardStatement.getEntries().stream()
                 .filter(entry -> entry.getType().equals(EntryType.INCOME))
                 .forEach(entry -> monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entry)));
+    }
+
+    private void calculateOverallInvestments(AccountStatement checkingAccountStatement, MonthlyReport monthlyReport) {
+        checkingAccountStatement.getEntries().stream()
+                .filter(entry -> entry.getType().equals(EntryType.DEPOT_TRANSFER))
+                .forEach(entry ->  monthlyReport.addToInvestment(entry.getAmount()));
     }
 }

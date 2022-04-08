@@ -79,14 +79,14 @@ public class CliAdapter {
         Path reportFile = csvPath.getParent().resolve(Paths.get(fileName));
         try (BufferedWriter writer = Files.newBufferedWriter(reportFile);
              CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                     .withHeader("ID", "Year", "Month", "Income", "Expenditure", "Win", "SavingRate", "####",
+                     .withHeader("ID", "Year", "Month", "Income", "Expenditure", "Win", "SavingRate", "Invest", "####",
                              "Accommodation", "Food", "Health", "Transportation", "Leisure", "Misc"))
         ) {
             List<AnnualReport> annualReportList = new ArrayList<>();
             for (Map.Entry<Integer, List<MonthlyReport>> entry : monthlyReportsPerYear.entrySet()) {
                 Integer year = entry.getKey();
                 List<MonthlyReport> reportSet = entry.getValue();
-                AnnualReport annualReport = new AnnualReport(year + "_ANNUAL_REPORT", year, new BigDecimal("0.00"), new BigDecimal("0.00"));
+                AnnualReport annualReport = new AnnualReport(year + "_ANNUAL_REPORT", year);
                 processReports(csvPrinter, reportSet, annualReport);
                 annualReportList.add(annualReport);
             }
@@ -96,7 +96,8 @@ public class CliAdapter {
                 String expenditureString = df.format(a.getExpenditure());
                 String winString = df.format(a.getWin());
                 String savingRateString = df.format(a.getSavingRate());
-                csvPrinter.printRecord(a.getFriendlyName(), a.getYear(), "----", incomeString, expenditureString, winString, savingRateString);
+                String investmentString = df.format(a.getInvestment());
+                csvPrinter.printRecord(a.getFriendlyName(), a.getYear(), "----", incomeString, expenditureString, winString, savingRateString, investmentString);
             }
             csvPrinter.flush();
         }
@@ -108,6 +109,7 @@ public class CliAdapter {
             String expenditureString = df.format(r.getExpenditure());
             String varString = df.format(r.getWin());
             String savingRateString = df.format(r.getSavingRate());
+            String investment = df.format(r.getInvestment());
             Map<EntryType, List<CostCentre>> cMap = getCostCentresAsMap(r.getCostCentres());
             csvPrinter.printRecord(
                     r.getFriendlyName(),
@@ -117,6 +119,7 @@ public class CliAdapter {
                     expenditureString,
                     varString,
                     savingRateString,
+                    investment,
                     "----",
                     getCostCentreAmountFormatted(cMap, EntryType.ACCOMMODATION_AND_COMMUNICATION),
                     getCostCentreAmountFormatted(cMap, EntryType.FOOD_AND_DRUGSTORE),
@@ -125,7 +128,7 @@ public class CliAdapter {
                     getCostCentreAmountFormatted(cMap, EntryType.LEISURE_ACTIVITIES_AND_PURCHASES),
                     getCostCentreAmountFormatted(cMap, EntryType.MISCELLANEOUS)
             );
-            annualReport.addProfitAndExpenses(r.getIncome(), r.getExpenditure());
+            annualReport.addProfitAndExpenses(r.getIncome(), r.getExpenditure(), r.getInvestment());
         }
     }
 

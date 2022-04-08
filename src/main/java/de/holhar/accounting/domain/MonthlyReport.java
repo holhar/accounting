@@ -18,6 +18,7 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
     protected BigDecimal expenditure;
     protected BigDecimal win;
     protected BigDecimal savingRate;
+    protected BigDecimal investment;
 
     protected final Set<CostCentre> costCentres = new TreeSet<>();
 
@@ -26,6 +27,7 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
         this.month = date.getMonth();
         this.year = date.getYear();
         this.income = new BigDecimal("0");
+        this.investment = new BigDecimal("0");
         this.expenditure = new BigDecimal("0");
     }
 
@@ -75,6 +77,14 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
         } else {
             savingRate = new BigDecimal("0");
         }
+    }
+
+    // Incorporate fees as well?
+    public void addToInvestment(BigDecimal investment) {
+        if (investment.compareTo(new BigDecimal("0")) < 0) {
+            investment = investment.multiply(new BigDecimal("-1"));
+        }
+        this.investment = this.investment.add(investment);
     }
 
     // FIXME: Violates immutability principle

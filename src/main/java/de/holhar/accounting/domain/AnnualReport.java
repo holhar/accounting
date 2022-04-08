@@ -6,15 +6,17 @@ import java.time.Month;
 
 public class AnnualReport extends MonthlyReport {
 
-    public AnnualReport(String friendlyName, int year, BigDecimal profit, BigDecimal expenditure) {
+    public AnnualReport(String friendlyName, int year) {
         super(friendlyName, LocalDate.of(year, Month.JANUARY, 1));
-        this.income = profit;
-        this.expenditure = expenditure;
+        this.income = new BigDecimal("0");
+        this.expenditure = new BigDecimal("0");
+        this.investment = new BigDecimal("0");
     }
 
-    public void addProfitAndExpenses(BigDecimal profit, BigDecimal expenditure) {
+    public void addProfitAndExpenses(BigDecimal profit, BigDecimal expenditure, BigDecimal investment) {
         this.income = this.income.add(profit);
         this.expenditure = this.expenditure.add(expenditure);
+        this.investment = this.investment.add(investment);
         calcWinAndSavingRate();
     }
 

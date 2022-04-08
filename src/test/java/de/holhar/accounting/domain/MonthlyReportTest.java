@@ -24,4 +24,30 @@ class MonthlyReportTest {
         assertEquals(new BigDecimal("2486.89"), monthlyReport.getWin());
         assertEquals(new BigDecimal("57.55"), monthlyReport.getSavingRate());
     }
+
+    @Test
+    void testAddToInvestment() {
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.OCTOBER, 1)
+        );
+        monthlyReport.setInvestment(new BigDecimal("111.11"));
+
+        monthlyReport.addToInvestment(new BigDecimal("68.99"));
+
+        assertEquals(new BigDecimal("180.10"), monthlyReport.getInvestment());
+    }
+
+    @Test
+    void testWhenNegativeInvestmentIsAddedThenAddPositiveValue() {
+        MonthlyReport monthlyReport = new MonthlyReport(
+                "2021_11_CHECKING_ACCOUNT_STATEMENT",
+                LocalDate.of(2021, Month.OCTOBER, 1)
+        );
+        monthlyReport.setInvestment(new BigDecimal("111.11"));
+
+        monthlyReport.addToInvestment(new BigDecimal("-20.89"));
+
+        assertEquals(new BigDecimal("132.00"), monthlyReport.getInvestment());
+    }
 }

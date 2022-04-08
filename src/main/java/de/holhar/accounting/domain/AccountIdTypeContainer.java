@@ -7,6 +7,6 @@ import lombok.Value;
 @AllArgsConstructor
 public class AccountIdTypeContainer {
 
-    String id;
-    AccountStatement.Type accountType;
+  String id;
+  AccountStatement.Type accountType;
 }

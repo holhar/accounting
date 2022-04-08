@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface SanitationService {
 
-    List<String> cleanUp(Path path);
+  List<String> cleanUp(Path path);
 }

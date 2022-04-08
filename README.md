@@ -1,9 +1,9 @@
 # Accounting
 
-This service parses accounting statements given in csv format and creates monthly and annual reports 
-accordingly. The service expects for a monthly report a checking account and credit account and calculates expenses 
-and income, neglecting transfers, if corresponding client ids have been configured (see section 'Configuration' for 
-more infos).
+This service parses accounting statements given in csv format and creates monthly and annual reports
+accordingly. The service expects for a monthly report a checking account and credit account and
+calculates expenses and income, neglecting transfers, if corresponding client ids have been
+configured (see section 'Configuration' for more infos).
 
 ## Formats
 
@@ -12,6 +12,7 @@ more infos).
 In the following, two examples are shown of how the processable source csvs do look like.
 
 Checking account statement:
+
 ```
 "account number:";"XX01234567890123456789 / checking account";
 
@@ -54,6 +55,7 @@ Checking account statement:
 ```
 
 Credit Card statement:
+
 ```
 "credit card:";"1111********9999";
 

@@ -1,23 +1,15 @@
 package de.holhar.accounting.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Value
+@AllArgsConstructor
 public class Balance {
 
-    private final BigDecimal value;
-    private final LocalDate date;
-
-    public Balance(BigDecimal value, LocalDate date) {
-        this.value = value;
-        this.date = date;
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
+    BigDecimal value;
+    LocalDate date;
 }

@@ -24,7 +24,6 @@ public class AccountStatementReportManager implements ReportManager {
     }
 
     public MonthlyReport createMonthlyReport(final LocalDate statementDate, Set<AccountStatement> statementSet) {
-        logger.debug("Create monthly report for {}.{}", statementDate.getMonth(), statementDate.getYear());
         if (statementSet.size() != 2) {
             String errorMessage = String.format("Monthly report  from '%s' does contain '%d' AccountStatements for " +
                             "this month -> should be '2', one checking account and one credit card statement",

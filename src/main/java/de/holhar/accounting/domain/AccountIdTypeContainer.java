@@ -1,20 +1,12 @@
 package de.holhar.accounting.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
+@Value
+@AllArgsConstructor
 public class AccountIdTypeContainer {
 
-    private final String id;
-    private final AccountStatement.Type accountType;
-
-    public AccountIdTypeContainer(String id, AccountStatement.Type accountType) {
-        this.id = id;
-        this.accountType = accountType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public AccountStatement.Type getAccountType() {
-        return accountType;
-    }
+    String id;
+    AccountStatement.Type accountType;
 }

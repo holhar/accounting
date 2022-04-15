@@ -9,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 public class AppProperties {
 
   private String csvPath;
+  private boolean skipImport;
   private String checkingAccountIdentifier;
   private String creditCardIdentifier;
   private List<String> intendedUseIdentifiers;
@@ -19,6 +20,14 @@ public class AppProperties {
 
   public void setCsvPath(String csvPath) {
     this.csvPath = csvPath;
+  }
+
+  public boolean isSkipImport() {
+    return skipImport;
+  }
+
+  public void setSkipImport(boolean skipImport) {
+    this.skipImport = skipImport;
   }
 
   public String getCheckingAccountIdentifier() {

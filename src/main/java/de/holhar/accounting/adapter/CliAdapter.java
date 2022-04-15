@@ -38,6 +38,7 @@ public class CliAdapter {
   private final AccountingService accountingService;
   private final String defaultCsvPath;
   private final DecimalFormat df;
+  private final boolean skipImport;
 
   public CliAdapter(AccountingService accountingService, AppProperties appProperties) {
     this.accountingService = accountingService;
@@ -47,9 +48,14 @@ public class CliAdapter {
     df = new DecimalFormat("0.00", symbols);
 
     this.defaultCsvPath = appProperties.getCsvPath();
+    this.skipImport = appProperties.isSkipImport();
   }
 
   public void startApplication() {
+    if (skipImport) {
+      return;
+    }
+
     Scanner scanner = new Scanner(System.in);
     try {
       logger.info(

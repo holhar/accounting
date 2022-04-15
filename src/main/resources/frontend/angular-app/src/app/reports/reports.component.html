@@ -1,0 +1,13 @@
+<div class="reports">
+    <div class="report" *ngFor="let report of reports">
+        <p>
+            {{report.friendlyName}}<br/>
+            {{report.month}}, {{report.year}}<br/>
+            income: {{report.income}}<br/>
+            expenditure: {{report.expenditure}}<br/>
+            investment: {{report.investment}}<br/>
+            win: {{report.win}}<br/>
+            savingRate: {{report.savingRate}}
+        </p>
+    </div>
+</div>

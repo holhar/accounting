@@ -1,5 +1,6 @@
 package de.holhar.accounting.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIgnore
   protected Long id;
 
   @ElementCollection

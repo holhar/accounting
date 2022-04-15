@@ -41,5 +41,4 @@ src/main/resources/accounting
 application-private.properties
 
 # transpiled Angular files
-src/main/resources/public/**.js
-src/main/resources/public/**.map
+src/main/resources/public/*

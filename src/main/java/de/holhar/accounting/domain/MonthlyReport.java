@@ -12,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Data
 public class MonthlyReport implements Comparable<MonthlyReport> {
@@ -24,9 +26,9 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
   @ElementCollection
   protected final Set<CostCentre> costCentres = new TreeSet<>();
 
-  protected final String friendlyName;
-  protected final int year;
-  private final Month month;
+  protected String friendlyName;
+  protected int year;
+  private Month month;
   protected BigDecimal income;
   protected BigDecimal expenditure;
   protected BigDecimal win;

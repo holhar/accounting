@@ -95,6 +95,27 @@
         </configuration>
         <version>3.10.1</version>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>ng</executable>
+          <workingDirectory>src/main/resources/frontend/angular-app</workingDirectory>
+          <arguments>
+            <argument>build</argument>
+          </arguments>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

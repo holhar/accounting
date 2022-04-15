@@ -6,14 +6,26 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.Data;
 
+@Entity
 @Data
 public class MonthlyReport implements Comparable<MonthlyReport> {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  protected Long id;
+
+  @ElementCollection
+  protected final Set<CostCentre> costCentres = new TreeSet<>();
+
   protected final String friendlyName;
   protected final int year;
-  protected final Set<CostCentre> costCentres = new TreeSet<>();
   private final Month month;
   protected BigDecimal income;
   protected BigDecimal expenditure;

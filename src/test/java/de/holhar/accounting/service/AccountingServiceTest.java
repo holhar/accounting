@@ -11,6 +11,7 @@ import de.holhar.accounting.domain.AccountStatement;
 import de.holhar.accounting.domain.Balance;
 import de.holhar.accounting.domain.EntryType;
 import de.holhar.accounting.domain.MonthlyReport;
+import de.holhar.accounting.domain.MonthlyReportRepository;
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.report.ReportManager;
 import de.holhar.accounting.service.sanitation.SanitationService;
@@ -43,6 +44,9 @@ class AccountingServiceTest {
   @Mock
   private ReportManager reportManager;
 
+  @Mock
+  private MonthlyReportRepository repository;
+
   @Test
   void createReport() throws IOException {
     List<String> accountStatementLines = Collections.singletonList("AccountStatement");
@@ -73,6 +77,7 @@ class AccountingServiceTest {
 
     verify(sanitationService, times(2)).cleanUp(any(Path.class));
     verify(deserializer, times(2)).readStatement(accountStatementLines);
-    verify(reportManager, times(1)).createMonthlyReport(any(LocalDate.class), anySet());
+    verify(reportManager).createMonthlyReport(any(LocalDate.class), anySet());
+    verify(repository).save(monthlyReport);
   }
 }

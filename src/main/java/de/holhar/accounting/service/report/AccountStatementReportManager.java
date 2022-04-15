@@ -46,16 +46,16 @@ public class AccountStatementReportManager implements ReportManager {
         checkingAccountStatement.getFrom()
     );
 
-    calculateAllCosts(checkingAccountStatement, creditCardStatement, monthlyReport);
-    calculateOverallProfit(checkingAccountStatement, creditCardStatement, monthlyReport);
-    calculateOverallInvestments(checkingAccountStatement, monthlyReport);
+    calculateCosts(checkingAccountStatement, creditCardStatement, monthlyReport);
+    calculateProfit(checkingAccountStatement, creditCardStatement, monthlyReport);
+    calculateInvestments(checkingAccountStatement, monthlyReport);
     monthlyReport.setExpenditure(reportCalculator.getExpenditure(monthlyReport));
     monthlyReport.calcWinAndSavingRate();
 
     return monthlyReport;
   }
 
-  private void calculateAllCosts(AccountStatement checkingAccountStatement,
+  private void calculateCosts(AccountStatement checkingAccountStatement,
       AccountStatement creditCardStatement, MonthlyReport monthlyReport) {
     checkingAccountStatement.getEntries().stream()
         .filter(Entry::isExpenditure)
@@ -66,7 +66,7 @@ public class AccountStatementReportManager implements ReportManager {
         .forEach(entry -> reportCalculator.addToCostCentres(monthlyReport, entry));
   }
 
-  private void calculateOverallProfit(AccountStatement checkingAccountStatement,
+  private void calculateProfit(AccountStatement checkingAccountStatement,
       AccountStatement creditCardStatement, MonthlyReport monthlyReport) {
     checkingAccountStatement.getEntries().stream()
         .filter(entry -> entry.getType().equals(EntryType.INCOME))
@@ -79,7 +79,7 @@ public class AccountStatementReportManager implements ReportManager {
             entry -> monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entry)));
   }
 
-  private void calculateOverallInvestments(AccountStatement checkingAccountStatement,
+  private void calculateInvestments(AccountStatement checkingAccountStatement,
       MonthlyReport monthlyReport) {
     checkingAccountStatement.getEntries().stream()
         .filter(entry -> entry.getType().equals(EntryType.DEPOT_TRANSFER))

@@ -1,17 +1,26 @@
 package de.holhar.accounting.domain;
 
 import java.math.BigDecimal;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@Embeddable
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 public class CostCentre implements Comparable<CostCentre> {
 
-  private final EntryType entryType;
+  @Enumerated(EnumType.STRING)
+  private EntryType entryType;
   private BigDecimal amount = new BigDecimal("0");
+
+  public CostCentre(EntryType entryType) {
+    this.entryType = entryType;
+  }
 
   public void addAmount(BigDecimal newAmount) {
     this.amount = this.amount.add(newAmount);

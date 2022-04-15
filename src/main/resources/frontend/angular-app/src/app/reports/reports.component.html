@@ -1,4 +1,6 @@
 <div class="reports">
+    <div echarts [options]="chartOptions" class="cemo-chart"></div>
+
     <div class="report" *ngFor="let report of reports">
         <p>
             {{report.friendlyName}}<br/>

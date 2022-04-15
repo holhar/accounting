@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule } from '@angular/common/http';
 
+import * as echarts from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
+
 import { AppComponent } from './app.component';
 import { ReportsComponent } from './reports/reports.component';
 
@@ -13,7 +16,10 @@ import { ReportsComponent } from './reports/reports.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxEchartsModule.forRoot({
+      echarts
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

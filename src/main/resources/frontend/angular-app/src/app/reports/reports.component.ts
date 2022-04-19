@@ -31,7 +31,9 @@ export class ReportsComponent implements OnInit {
     this.reports?.forEach(report => {
         this.chartData?.push({
           date: report.month + ' ' + report.year,
-          expenditure: (report.expenditure === undefined ? 0 : report.expenditure) * -1
+          expenditure: (report.expenditure === undefined ? 0 : report.expenditure) * -1,
+          income: report.income,
+          savingRate: report.savingRate
         })
     })
   }
@@ -41,10 +43,10 @@ export class ReportsComponent implements OnInit {
     this.chartOptions = {
 
       title: {
-        text: 'Expenditure per month!!!',
+        text: 'Income and expenditure per month',
       },
       legend: {
-        data: ['Expenditure']
+        data: ['Expenditure', 'Income']
       },
       tooltip: {
       },
@@ -59,6 +61,11 @@ export class ReportsComponent implements OnInit {
           name: 'Expenditure',
           type: 'line',
           data: this.chartData?.map(c => c.expenditure)
+        },
+        {
+          name: 'Income',
+          type: 'line',
+          data: this.chartData?.map(c => c.income)
         }
       ]
     };

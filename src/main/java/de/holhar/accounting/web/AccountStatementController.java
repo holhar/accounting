@@ -1,6 +1,5 @@
 package de.holhar.accounting.web;
 
-import de.holhar.accounting.domain.MonthlyReportRepository;
 import de.holhar.accounting.service.AccountStatementService;
 import de.holhar.accounting.service.CsvDeSanitizationService;
 import org.slf4j.Logger;

@@ -3,7 +3,7 @@ package de.holhar.accounting.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import de.holhar.accounting.domain.MonthlyReportRepository;
+import de.holhar.accounting.repository.MonthlyReportRepository;
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.report.ReportManager;
 import de.holhar.accounting.service.sanitation.Sanitizer;

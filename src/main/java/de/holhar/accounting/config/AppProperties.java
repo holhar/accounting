@@ -15,6 +15,8 @@ public class AppProperties {
   private String creditCardIdentifier;
   private List<String> intendedUseIdentifiers;
 
+  private String reportStartDate;
+
   public String getImportPath() {
     return importPath;
   }
@@ -53,5 +55,13 @@ public class AppProperties {
 
   public void setIntendedUseIdentifiers(List<String> intendedUseIdentifiers) {
     this.intendedUseIdentifiers = intendedUseIdentifiers;
+  }
+
+  public String getReportStartDate() {
+    return reportStartDate;
+  }
+
+  public void setReportStartDate(String reportStartDate) {
+    this.reportStartDate = reportStartDate;
   }
 }

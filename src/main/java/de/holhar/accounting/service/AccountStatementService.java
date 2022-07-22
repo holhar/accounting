@@ -2,9 +2,9 @@ package de.holhar.accounting.service;
 
 import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.domain.CheckingAccountEntry;
-import de.holhar.accounting.domain.CheckingAccountEntryRepository;
+import de.holhar.accounting.repository.CheckingAccountEntryRepository;
 import de.holhar.accounting.domain.CreditCardEntry;
-import de.holhar.accounting.domain.CreditCardEntryRepository;
+import de.holhar.accounting.repository.CreditCardEntryRepository;
 import de.holhar.accounting.domain.Entry;
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.sanitation.Sanitizer;

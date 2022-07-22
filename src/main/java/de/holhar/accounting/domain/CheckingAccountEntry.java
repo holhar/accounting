@@ -10,10 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 @Entity
 @Data
@@ -25,7 +23,10 @@ public class CheckingAccountEntry implements Entry {
   @JsonIgnore
   protected Long id;
 
+  @Column
   private LocalDate bookingDate;
+
+  @Column
   private LocalDate valueDate;
   private String bookingText;
   private String client;

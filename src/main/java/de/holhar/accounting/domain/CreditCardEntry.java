@@ -3,13 +3,13 @@ package de.holhar.accounting.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +27,11 @@ public class CreditCardEntry implements Entry {
    * Revenue billed and not included in the balance
    */
   private boolean billedAndNotIncluded;
+
+  @Column
   private LocalDate valueDate;
+
+  @Column
   private LocalDate receiptDate;
   private String description;
   private BigDecimal amount;

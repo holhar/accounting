@@ -42,3 +42,5 @@ application-private.properties
 
 # transpiled Angular files
 src/main/resources/public/*
+
+docker/mysql-data

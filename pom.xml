@@ -3,7 +3,7 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>accounting</artifactId>
-  <description>Demo project for Spring Boot</description>
+  <description>Accounting</description>
   <groupId>de.holhar</groupId>
   <modelVersion>4.0.0</modelVersion>
   <name>accounting</name>

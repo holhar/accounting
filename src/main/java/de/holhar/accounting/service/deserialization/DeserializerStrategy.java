@@ -1,8 +1,9 @@
 package de.holhar.accounting.service.deserialization;
 
 import de.holhar.accounting.config.AppProperties;
-import de.holhar.accounting.domain.AccountStatement;
+import de.holhar.accounting.domain.Entry;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,28 +12,28 @@ public class DeserializerStrategy implements Deserializer {
 
   private final String checkingAccountIdentifier;
   private final String creditCardIdentifier;
-  private final AccountStatementDeserializer accountStatementDeserializer;
-  private final CreditCardStatementDeserializer creditCardStatementDeserializer;
+  private final CheckingAccountEntryDeserializer checkingAccountEntryDeserializer;
+  private final CreditCardEntryDeserializer creditCardEntryDeserializer;
 
   @Autowired
   public DeserializerStrategy(AppProperties properties,
-      AccountStatementDeserializer accountStatementDeserializer,
-      CreditCardStatementDeserializer creditCardStatementDeserializer) {
+      CheckingAccountEntryDeserializer checkingAccountEntryDeserializer,
+      CreditCardEntryDeserializer creditCardEntryDeserializer) {
     this.checkingAccountIdentifier = properties.getCheckingAccountIdentifier();
     this.creditCardIdentifier = properties.getCreditCardIdentifier();
-    this.accountStatementDeserializer = accountStatementDeserializer;
-    this.creditCardStatementDeserializer = creditCardStatementDeserializer;
+    this.checkingAccountEntryDeserializer = checkingAccountEntryDeserializer;
+    this.creditCardEntryDeserializer = creditCardEntryDeserializer;
   }
 
   @Override
-  public AccountStatement readStatement(List<String> lines) {
+  public Stream<Entry> readStatement(List<String> lines) {
     if (lines.isEmpty()) {
       throw new IllegalArgumentException("Invalid lines given, size must be greater than zero");
     }
     if (lines.get(0).startsWith(checkingAccountIdentifier)) {
-      return accountStatementDeserializer.readStatement(lines);
+      return checkingAccountEntryDeserializer.readStatement(lines);
     } else if (lines.get(0).startsWith(creditCardIdentifier)) {
-      return creditCardStatementDeserializer.readStatement(lines);
+      return creditCardEntryDeserializer.readStatement(lines);
     } else {
       throw new IllegalArgumentException("Can not deserialize given lines");
     }

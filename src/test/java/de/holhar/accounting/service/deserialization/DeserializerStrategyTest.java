@@ -22,10 +22,10 @@ class DeserializerStrategyTest {
   private DeserializerStrategy deserializerStrategy;
 
   @Mock
-  private CreditCardStatementDeserializer creditCardStatementDeserializer;
+  private CreditCardEntryDeserializer creditCardEntryDeserializer;
 
   @Mock
-  private AccountStatementDeserializer accountStatementDeserializer;
+  private CheckingAccountEntryDeserializer checkingAccountEntryDeserializer;
 
   @Mock
   private AppProperties appProperties;
@@ -49,13 +49,13 @@ class DeserializerStrategyTest {
   void readStatement_checkingAccountLines_shouldExecuteCreditCardStatementDeserializer() {
     List<String> lines = Collections.singletonList("CreditCard XYZ");
     deserializerStrategy.readStatement(lines);
-    verify(creditCardStatementDeserializer).readStatement(lines);
+    verify(creditCardEntryDeserializer).readStatement(lines);
   }
 
   @Test
   void readStatement_checkingAccountLines_shouldExecuteAccountStatementDeserializer() {
     List<String> lines = Collections.singletonList("CheckingAccount XYZ");
     deserializerStrategy.readStatement(lines);
-    verify(accountStatementDeserializer).readStatement(lines);
+    verify(checkingAccountEntryDeserializer).readStatement(lines);
   }
 }

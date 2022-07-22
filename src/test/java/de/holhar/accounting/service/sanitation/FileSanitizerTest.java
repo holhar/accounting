@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FileSanitationServiceTest {
+class FileSanitizerTest {
 
   @Autowired
-  private SanitationService fileSanitationService;
+  private Sanitizer fileSanitizer;
 
   @Test
   void cleanUp_accountingStatement_Succeeds() throws IOException {
@@ -23,7 +23,7 @@ class FileSanitationServiceTest {
     Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/acc_202001.csv");
 
     // When
-    List<String> resultLines = fileSanitationService.cleanUp(unprocessedFile);
+    List<String> resultLines = fileSanitizer.sanitize(unprocessedFile);
 
     // Then
     Path processedFile = Paths.get("src/test/resources/accounting/sanitized/acc_202001.csv");
@@ -37,7 +37,7 @@ class FileSanitationServiceTest {
     Path unprocessedFile = Paths.get("src/test/resources/accounting/unprocessed/cre_202001.csv");
 
     // When
-    List<String> resultLines = fileSanitationService.cleanUp(unprocessedFile);
+    List<String> resultLines = fileSanitizer.sanitize(unprocessedFile);
 
     // Then
     Path processedFile = Paths.get("src/test/resources/accounting/sanitized/cre_202001.csv");

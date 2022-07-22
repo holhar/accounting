@@ -8,26 +8,27 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
-  private String csvPath;
-  private boolean skipImport;
+  private String importPath;
+  private String deSanitizationPath;
+
   private String checkingAccountIdentifier;
   private String creditCardIdentifier;
   private List<String> intendedUseIdentifiers;
 
-  public String getCsvPath() {
-    return csvPath;
+  public String getImportPath() {
+    return importPath;
   }
 
-  public void setCsvPath(String csvPath) {
-    this.csvPath = csvPath;
+  public void setImportPath(String importPath) {
+    this.importPath = importPath;
   }
 
-  public boolean isSkipImport() {
-    return skipImport;
+  public String getDeSanitizationPath() {
+    return deSanitizationPath;
   }
 
-  public void setSkipImport(boolean skipImport) {
-    this.skipImport = skipImport;
+  public void setDeSanitizationPath(String deSanitizationPath) {
+    this.deSanitizationPath = deSanitizationPath;
   }
 
   public String getCheckingAccountIdentifier() {

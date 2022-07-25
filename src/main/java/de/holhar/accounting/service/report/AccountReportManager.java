@@ -5,6 +5,9 @@ import de.holhar.accounting.domain.CreditCardEntry;
 import de.holhar.accounting.domain.Entry;
 import de.holhar.accounting.domain.EntryType;
 import de.holhar.accounting.domain.MonthlyReport;
+import de.holhar.accounting.repository.CheckingAccountEntryRepository;
+import de.holhar.accounting.repository.CheckingAccountEntryRepository;
+import de.holhar.accounting.repository.CreditCardEntryRepository;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -12,10 +15,45 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountReportManager implements ReportManager {
 
-  private final ReportCalculator reportCalculator;
+  public static class ReportEntry {
 
-  public AccountReportManager(ReportCalculator reportCalculator) {
+    private final List<CheckingAccountEntry> checkingAccountEntries;
+    private final List<CreditCardEntry> creditCardEntries;
+
+    public ReportEntry(
+        List<CheckingAccountEntry> checkingAccountEntries,
+        List<CreditCardEntry> creditCardEntries) {
+      this.checkingAccountEntries = checkingAccountEntries;
+      this.creditCardEntries = creditCardEntries;
+    }
+
+    public List<CheckingAccountEntry> getCheckingAccountEntries() {
+      return checkingAccountEntries;
+    }
+
+    public List<CreditCardEntry> getCreditCardEntries() {
+      return creditCardEntries;
+    }
+  }
+
+  private final ReportCalculator reportCalculator;
+  private final CreditCardEntryRepository creditCardEntryRepository;
+  private final CheckingAccountEntryRepository checkingAccountEntryRepository;
+
+  public AccountReportManager(ReportCalculator reportCalculator,
+      CreditCardEntryRepository creditCardEntryRepository,
+      CheckingAccountEntryRepository checkingAccountEntryRepository) {
     this.reportCalculator = reportCalculator;
+    this.creditCardEntryRepository = creditCardEntryRepository;
+    this.checkingAccountEntryRepository = checkingAccountEntryRepository;
+  }
+
+  public ReportEntry getReportDataSetEntry(LocalDate monthIterator) {
+    LocalDate start = monthIterator.withDayOfMonth(1);
+    LocalDate end = monthIterator.withDayOfMonth(monthIterator.getMonth().length(monthIterator.isLeapYear()));
+    List<CheckingAccountEntry> checkingAccountEntries = checkingAccountEntryRepository.findByBookingDateAfterAndBookingDateBefore(start, end);
+    List<CreditCardEntry> creditCardEntries = creditCardEntryRepository.findByValueDateAfterAndValueDateBefore(start, end);
+    return new ReportEntry(checkingAccountEntries, creditCardEntries);
   }
 
   public MonthlyReport createMonthlyReport(final LocalDate statementDate,

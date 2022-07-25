@@ -2,10 +2,10 @@ package de.holhar.accounting.service;
 
 import de.holhar.accounting.config.AppProperties;
 import de.holhar.accounting.domain.CheckingAccountEntry;
-import de.holhar.accounting.repository.CheckingAccountEntryRepository;
 import de.holhar.accounting.domain.CreditCardEntry;
-import de.holhar.accounting.repository.CreditCardEntryRepository;
 import de.holhar.accounting.domain.Entry;
+import de.holhar.accounting.repository.CheckingAccountEntryRepository;
+import de.holhar.accounting.repository.CreditCardEntryRepository;
 import de.holhar.accounting.service.deserialization.Deserializer;
 import de.holhar.accounting.service.sanitation.Sanitizer;
 import java.io.IOException;
@@ -14,15 +14,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountStatementService {
-
-  private static final Logger logger = LoggerFactory.getLogger(AccountStatementService.class);
 
   private final Sanitizer sanitizer;
   private final Deserializer deserializer;
@@ -50,7 +46,6 @@ public class AccountStatementService {
     List<Entry> entries;
     try (Stream<Path> pathStream = Files.list(importPath)) {
       entries = pathStream
-          .peek(p -> logger.info("Start import for report {}", p.getFileName()))
           .map(sanitizer::sanitize)
           .flatMap(deserializer::readStatement)
           .collect(Collectors.toList());

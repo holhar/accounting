@@ -28,8 +28,8 @@ public class AccountReportController {
   }
 
   @PostMapping("/monthly")
-  public ResponseEntity<Void> createMonthlyReports() {
+  public ResponseEntity<String> createMonthlyReports() {
     reportService.createReports();
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok("Report creation successful");
   }
 }

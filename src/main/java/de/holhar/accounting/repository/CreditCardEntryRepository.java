@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CreditCardEntryRepository extends CrudRepository<CreditCardEntry, Long> {
 
-  List<CreditCardEntry> findByValueDateAfterAndValueDateBefore(LocalDate start, LocalDate end);
+  List<CreditCardEntry> findByReceiptDateBetween(LocalDate start, LocalDate end);
 }

@@ -6,7 +6,6 @@ import de.holhar.accounting.domain.Entry;
 import de.holhar.accounting.domain.EntryType;
 import de.holhar.accounting.domain.MonthlyReport;
 import de.holhar.accounting.repository.CheckingAccountEntryRepository;
-import de.holhar.accounting.repository.CheckingAccountEntryRepository;
 import de.holhar.accounting.repository.CreditCardEntryRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -49,10 +48,10 @@ public class AccountReportManager implements ReportManager {
   }
 
   public ReportEntry getReportDataSetEntry(LocalDate monthIterator) {
-    LocalDate start = monthIterator.withDayOfMonth(1);
-    LocalDate end = monthIterator.withDayOfMonth(monthIterator.getMonth().length(monthIterator.isLeapYear()));
-    List<CheckingAccountEntry> checkingAccountEntries = checkingAccountEntryRepository.findByBookingDateAfterAndBookingDateBefore(start, end);
-    List<CreditCardEntry> creditCardEntries = creditCardEntryRepository.findByValueDateAfterAndValueDateBefore(start, end);
+    LocalDate startDate = monthIterator.withDayOfMonth(1);
+    LocalDate endDate = monthIterator.withDayOfMonth(monthIterator.getMonth().length(monthIterator.isLeapYear()));
+    List<CheckingAccountEntry> checkingAccountEntries = checkingAccountEntryRepository.findByValueDateBetween(startDate, endDate);
+    List<CreditCardEntry> creditCardEntries = creditCardEntryRepository.findByReceiptDateBetween(startDate, endDate);
     return new ReportEntry(checkingAccountEntries, creditCardEntries);
   }
 

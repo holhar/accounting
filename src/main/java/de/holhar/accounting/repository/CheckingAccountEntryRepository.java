@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CheckingAccountEntryRepository extends CrudRepository<CheckingAccountEntry, Long> {
 
-  List<CheckingAccountEntry> findByBookingDateAfterAndBookingDateBefore(LocalDate start, LocalDate end);
+  List<CheckingAccountEntry> findByValueDateBetween(LocalDate start, LocalDate end);
 }

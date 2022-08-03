@@ -54,7 +54,7 @@ public class CsvDeSanitizationService {
 
   private void writeToFile(Path fileName, List<String> lines) {
     Path resultFilePath = resultPath.resolve(fileName);
-    try(BufferedWriter writer = Files.newBufferedWriter(resultFilePath, StandardCharsets.UTF_8)) {
+    try(BufferedWriter writer = Files.newBufferedWriter(resultFilePath, StandardCharsets.ISO_8859_1)) {
       lines.stream().sequential().forEach(line -> writeLine(writer, line));
     } catch (IOException e) {
       var errorMsg = String.format("Failed to write migrate types to file '%s'", resultFilePath.getFileName().toString());

@@ -9,14 +9,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FileDeSanitizer implements
-    DeSanitizer {
+public class FileDeSanitizer implements DeSanitizer {
 
   @Override
   public List<String> deSanitize(Path path) {
     try {
       return Files.readAllLines(path, StandardCharsets.ISO_8859_1).stream().sequential()
-          .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8))
+          .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.ISO_8859_1))
           .map(line -> line.replaceAll("^;;+$", ""))
           .map(line -> line.replace(";", "\";\""))
           .map(line -> {

@@ -17,8 +17,7 @@ public class FileSanitizer implements Sanitizer {
     try {
       return Files.readAllLines(path, StandardCharsets.ISO_8859_1)
           .stream()
-          .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1),
-              StandardCharsets.UTF_8))
+          .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.ISO_8859_1))
           .map(line -> line.replace("\"", ""))
           .map(line -> line.replaceAll("\\s\\s+", " "))
           .map(line -> line.replaceAll("^;;+$", ";"))

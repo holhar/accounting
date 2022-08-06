@@ -14,11 +14,15 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountStatementService {
+
+  private static final Logger logger = LoggerFactory.getLogger(AccountStatementService.class);
 
   private final Sanitizer sanitizer;
   private final Deserializer deserializer;
@@ -46,6 +50,7 @@ public class AccountStatementService {
     List<Entry> entries;
     try (Stream<Path> pathStream = Files.list(importPath)) {
       entries = pathStream
+          .peek(p -> logger.debug("Start import for file '{}'", p.getFileName()))
           .map(sanitizer::sanitize)
           .flatMap(deserializer::readStatement)
           .collect(Collectors.toList());

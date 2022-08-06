@@ -20,7 +20,9 @@ public class CreditCardEntryDeserializer implements Deserializer {
   @Override
   public Stream<Entry> readStatement(List<String> lines) {
     ConcurrentLinkedDeque<String> linesQueue = new ConcurrentLinkedDeque<>(lines);
-    while (linesQueue.peek() != null && !linesQueue.peek().startsWith("Ja;")) {
+    while (linesQueue.peek() != null
+        && !linesQueue.peek().startsWith("Ja;")
+        && !linesQueue.peek().startsWith("Nein;")) {
       linesQueue.pop();
     }
     return linesQueue.stream().map(this::getCreditCardEntry);
@@ -35,19 +37,19 @@ public class CreditCardEntryDeserializer implements Deserializer {
     String amountString = entryFields.pop().replace(".", "").replace(",", ".").trim();
     // originalAmountString is null, blank, or contains some value I'm not interested in, so I set
     // it to '0' so that its value can be used to create a BigDecimal
-    String originalAmountString = entryFields.pop();
-    originalAmountString = "0";
+    entryFields.pop();
+    var originalAmountString = "0";
     EntryType type = EntryType.fromValue(entryFields.getLast().isBlank() ? "" : entryFields.removeLast().trim());
 
     CreditCardEntry entry = new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate,
         description, new BigDecimal(amountString), new BigDecimal(originalAmountString), type);
 
-//    if ((entry.isExpenditure() && entry.hasPositiveAmount())
-//        || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
-//      String errMsg = String.format("Entry '%s' is invalid: type '%s', amount '%s'",
-//          entry.getDescription(), entry.getType().getValue(), entry.getAmount());
-//      throw new IllegalStateException(errMsg);
-//    }
+    if ((entry.isExpenditure() && entry.hasPositiveAmount())
+        || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
+      String errMsg = String.format("Entry '%s' is invalid: type '%s', amount '%s'",
+          entry.getDescription(), entry.getType().getValue(), entry.getAmount());
+      throw new IllegalStateException(errMsg);
+    }
     return entry;
   }
 }

@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,22 +18,17 @@ public class CsvDeSanitizationService {
   private static final Logger logger = LoggerFactory.getLogger(CsvDeSanitizationService.class);
 
   private final DeSanitizer deSanitizer;
-
-  private final Path sourcePath;
   private final Path resultPath;
 
   public CsvDeSanitizationService(DeSanitizer deSanitizer, AppProperties appProperties) {
     this.deSanitizer = deSanitizer;
 
     Path deSanitizationPath = ServiceUtils.getValidPath(appProperties.getDeSanitizationPath());
-    this.sourcePath = deSanitizationPath.resolve("source");
     this.resultPath = deSanitizationPath.resolve("result");
   }
 
-  public void deSanitize() throws IOException {
-    try(Stream<Path> sourcePaths = Files.list(sourcePath)) {
-      sourcePaths.forEach(this::deSanitize);
-    }
+  public void deSanitize(List<Path> files) {
+      files.forEach(this::deSanitize);
   }
 
   private void deSanitize(Path sourceFilePath) {

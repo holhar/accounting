@@ -28,7 +28,8 @@ public class AccountReportController {
     return repository.findAll();
   }
 
-  @PostMapping("/monthly")
+  // TODO: Implement endpoint for downloading csv file
+  @GetMapping("/monthly")
   public ResponseEntity<String> createMonthlyReports() {
     reportService.createReports();
     return ResponseEntity.ok("Report creation successful");

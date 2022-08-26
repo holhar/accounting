@@ -160,3 +160,18 @@ app.intendedUseIdentifiers=PayPal
 ```
 $ java -jar accounting.jar
 ```
+
+## Commands
+
+### Import statements
+
+Create zip file:
+
+    $ zip -r statements.zip .
+
+Upload the data:
+
+    $ curl -X POST \
+        -H'content-type:multipart/form-data' \
+        -F 'file=@1_import.zip' \
+        'http://localhost:8080/statements/import'

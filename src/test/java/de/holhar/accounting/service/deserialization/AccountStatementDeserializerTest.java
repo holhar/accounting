@@ -3,17 +3,6 @@ package de.holhar.accounting.service.deserialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.holhar.accounting.domain.AccountStatement;
-import de.holhar.accounting.domain.CheckingAccountEntry;
-import de.holhar.accounting.domain.EntryType;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.List;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 

@@ -2,6 +2,7 @@ package de.holhar.accounting.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.holhar.accounting.report.domain.MonthlyReport;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;

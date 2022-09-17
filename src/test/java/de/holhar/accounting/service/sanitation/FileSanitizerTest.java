@@ -2,6 +2,7 @@ package de.holhar.accounting.service.sanitation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

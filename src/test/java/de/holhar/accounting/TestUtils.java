@@ -1,7 +1,7 @@
 package de.holhar.accounting;
 
-import de.holhar.accounting.domain.CheckingAccountEntry;
-import de.holhar.accounting.domain.EntryType;
+import de.holhar.accounting.report.domain.CheckingAccountEntry;
+import de.holhar.accounting.report.domain.EntryType;
 import java.math.BigDecimal;
 
 public class TestUtils {

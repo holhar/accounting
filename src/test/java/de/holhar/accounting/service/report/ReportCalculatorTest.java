@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.holhar.accounting.TestUtils;
-import de.holhar.accounting.domain.CheckingAccountEntry;
-import de.holhar.accounting.domain.CostCentre;
-import de.holhar.accounting.domain.Entry;
-import de.holhar.accounting.domain.EntryType;
-import de.holhar.accounting.domain.MonthlyReport;
+import de.holhar.accounting.report.application.service.report.ReportCalculator;
+import de.holhar.accounting.report.domain.CheckingAccountEntry;
+import de.holhar.accounting.report.domain.CostCentre;
+import de.holhar.accounting.report.domain.Entry;
+import de.holhar.accounting.report.domain.EntryType;
+import de.holhar.accounting.report.domain.MonthlyReport;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;

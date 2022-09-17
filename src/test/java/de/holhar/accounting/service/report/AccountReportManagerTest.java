@@ -3,27 +3,9 @@ package de.holhar.accounting.service.report;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import de.holhar.accounting.TestUtils;
-import de.holhar.accounting.domain.AccountStatement;
-import de.holhar.accounting.domain.Balance;
-import de.holhar.accounting.domain.Entry;
-import de.holhar.accounting.domain.EntryType;
-import de.holhar.accounting.domain.MonthlyReport;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)

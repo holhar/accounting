@@ -3,10 +3,11 @@ package de.holhar.accounting.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import de.holhar.accounting.repository.MonthlyReportRepository;
-import de.holhar.accounting.service.deserialization.Deserializer;
-import de.holhar.accounting.service.report.ReportManager;
-import de.holhar.accounting.service.sanitation.Sanitizer;
+import de.holhar.accounting.report.adapter.out.persistence.MonthlyReportRepository;
+import de.holhar.accounting.report.application.service.AccountStatementService;
+import de.holhar.accounting.report.application.service.deserialization.Deserializer;
+import de.holhar.accounting.report.application.service.report.ReportManager;
+import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

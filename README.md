@@ -3,13 +3,13 @@
 This service parses accounting statements given in csv format and creates monthly and annual reports
 accordingly. The service expects for a monthly report a checking account and credit account and
 calculates expenses and income, neglecting transfers, if corresponding client ids have been
-configured (see section 'Configuration' for more infos).
+configured (see section 'Configuration' for more information).
 
 ## Formats
 
 ### Source csv format
 
-In the following, two examples are shown of how the processable source csvs do look like.
+In the following, two examples are shown of how the processable source csv files do look like.
 
 Checking account statement:
 
@@ -173,5 +173,5 @@ Upload the data:
 
     $ curl -X POST \
         -H'content-type:multipart/form-data' \
-        -F 'file=@1_import.zip' \
+        -F 'file=@statements.zip' \
         'http://localhost:8080/statements/import'

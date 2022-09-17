@@ -32,9 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Maven
-out
-
 src/main/resources/accounting
 
 ### Misc

@@ -1,10 +1,10 @@
 package de.holhar.accounting.report.adapter.in.web;
 
 import de.holhar.accounting.common.WebAdapter;
+import de.holhar.accounting.report.application.port.in.CreateMonthlyReportsUseCase;
 import de.holhar.accounting.report.application.port.in.DownloadMonthlyReportsCsvUseCase;
 import de.holhar.accounting.report.application.port.out.LoadReportsPort;
 import de.holhar.accounting.report.domain.MonthlyReport;
-import de.holhar.accounting.report.application.service.AccountReportService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,26 +21,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountReportController {
 
   private final DownloadMonthlyReportsCsvUseCase downloadMonthlyReportsCsvUseCase;
-  private final AccountReportService reportService;
+  private final CreateMonthlyReportsUseCase createMonthlyReportsUseCase;
   private final LoadReportsPort loadReportsPort;
 
-  // TODO: Take shortcuts consciously...
+  // Taking shortcuts consciously...
   @GetMapping
   public List<MonthlyReport> getMonthlyReports() {
     return loadReportsPort.loadAllMonthlyReports();
   }
 
-  // TODO: Implement endpoint for downloading csv file
-  @GetMapping("/monthly")
-  public ResponseEntity<String> createMonthlyReports() {
-    reportService.createReports();
-    return ResponseEntity.ok("Report creation successful");
+  @GetMapping(produces = "text/csv")
+  public ResponseEntity<String> downloadMonthlyReports() throws IOException {
+    String csvReport = downloadMonthlyReportsCsvUseCase.downloadCsvReport();
+    return ResponseEntity.ok(csvReport);
   }
 
   @PostMapping
-  public ResponseEntity<String> createFullCsvReport() throws IOException {
-    // TODO: Continue with use case definition for controllers
-    String csvReport = downloadMonthlyReportsCsvUseCase.createCsvReport();
-    return ResponseEntity.ok(csvReport);
+  public ResponseEntity<String> createMonthlyReports() {
+    createMonthlyReportsUseCase.createReports();
+    return ResponseEntity.ok("Report creation successful");
   }
 }

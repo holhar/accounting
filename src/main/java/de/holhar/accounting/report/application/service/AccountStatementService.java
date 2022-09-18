@@ -1,6 +1,7 @@
 package de.holhar.accounting.report.application.service;
 
 import de.holhar.accounting.common.UseCase;
+import de.holhar.accounting.report.application.port.in.ImportAccountStatementsUseCase;
 import de.holhar.accounting.report.application.port.out.SaveStatementsPort;
 import de.holhar.accounting.report.application.service.deserialization.Deserializer;
 import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
@@ -15,10 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Create beans via AccountingConfiguration
 @RequiredArgsConstructor
 @UseCase
-public class AccountStatementService {
+public class AccountStatementService implements ImportAccountStatementsUseCase {
 
   private static final Logger logger = LoggerFactory.getLogger(AccountStatementService.class);
 
@@ -28,7 +28,6 @@ public class AccountStatementService {
 
   public void importStatements(List<Path> files) {
     List<Entry> entries = files.stream()
-          .peek(p -> logger.debug("Start import for file '{}'", p.getFileName()))
           .map(sanitizer::sanitize)
           .flatMap(deserializer::readStatement)
           .collect(Collectors.toList());

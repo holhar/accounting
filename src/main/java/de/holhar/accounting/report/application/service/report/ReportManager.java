@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface ReportManager {
 
-  MonthlyReport createMonthlyReport(final LocalDate statementDate,
-      List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries);
+  MonthlyReport createMonthlyReport(
+      final LocalDate statementDate,
+      List<CheckingAccountEntry> checkingAccountEntries, 
+      List<CreditCardEntry> creditCardEntries
+  );
 }

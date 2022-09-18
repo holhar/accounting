@@ -13,13 +13,12 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
 
-@Component(value = "accountStatementDeserializer")
 public class CheckingAccountEntryDeserializer implements Deserializer {
 
   private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}\\.\\d{2}\\.20\\d{2}.*?");
+
   @Override
   public Stream<Entry> readStatement(List<String> lines) {
     ConcurrentLinkedDeque<String> linesQueue = new ConcurrentLinkedDeque<>(lines);

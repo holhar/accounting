@@ -1,8 +1,7 @@
 package de.holhar.accounting.report.adapter.in.web;
 
 import de.holhar.accounting.common.WebAdapter;
-import de.holhar.accounting.report.application.service.AccountStatementService;
-import de.holhar.accounting.report.application.service.CsvDeSanitizationService;
+import de.holhar.accounting.report.application.port.in.ImportAccountStatementsUseCase;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -24,8 +23,7 @@ public class AccountStatementController {
 
   private static final Logger logger = LoggerFactory.getLogger(AccountStatementController.class);
 
-  private final AccountStatementService accountStatementService;
-  private final CsvDeSanitizationService csvDeSanitizationService;
+  private final ImportAccountStatementsUseCase importAccountStatementsUseCase;
   private final FileHandler fileHandler;
 
   @PostMapping("/import")
@@ -33,7 +31,7 @@ public class AccountStatementController {
       throws IOException {
     List<Path> files = fileHandler.unpackZipFile(zipFile);
     try {
-      accountStatementService.importStatements(files);
+      importAccountStatementsUseCase.importStatements(files);
     } catch (Exception e) {
       logger.error("Reports import failed", e);
       return ResponseEntity.internalServerError().body("Batch import failed: " + e.getMessage());

@@ -11,9 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
 
-@Component(value = "creditCardStatementDeserializer")
 public class CreditCardEntryDeserializer implements Deserializer {
 
   protected static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

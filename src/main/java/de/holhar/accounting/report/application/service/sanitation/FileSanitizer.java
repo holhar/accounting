@@ -6,10 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@Service
 public class FileSanitizer implements Sanitizer {
 
   @Override

@@ -2,6 +2,7 @@ package de.holhar.accounting.report.application.service;
 
 import de.holhar.accounting.AccountingConfigurationProperties;
 import de.holhar.accounting.common.UseCase;
+import de.holhar.accounting.report.application.port.in.CreateMonthlyReportsUseCase;
 import de.holhar.accounting.report.application.port.in.DownloadMonthlyReportsCsvUseCase;
 import de.holhar.accounting.report.application.port.out.LoadReportsPort;
 import de.holhar.accounting.report.application.port.out.SaveReportsPort;
@@ -33,9 +34,10 @@ import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Create beans via AccountingConfiguration
 @UseCase
-public class AccountReportService implements DownloadMonthlyReportsCsvUseCase {
+public class AccountReportService implements
+    DownloadMonthlyReportsCsvUseCase,
+    CreateMonthlyReportsUseCase {
 
   private static final Logger logger = LoggerFactory.getLogger(AccountReportService.class);
 
@@ -91,7 +93,7 @@ public class AccountReportService implements DownloadMonthlyReportsCsvUseCase {
     }
   }
 
-  public String createCsvReport() throws IOException {
+  public String downloadCsvReport() throws IOException {
     Map<Integer, List<MonthlyReport>> monthlyReportsPerYear =
         loadReportsPort.loadAllMonthlyReports().stream().collect(Collectors.groupingBy(MonthlyReport::getYear));
 

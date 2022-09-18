@@ -11,10 +11,8 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component
 public class FileHandler {
 
   public List<Path> unpackZipFile(MultipartFile zipFile) throws IOException {

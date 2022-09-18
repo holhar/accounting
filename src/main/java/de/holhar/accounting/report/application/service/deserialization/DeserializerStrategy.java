@@ -1,29 +1,17 @@
 package de.holhar.accounting.report.application.service.deserialization;
 
-import de.holhar.accounting.AccountingConfigurationProperties;
 import de.holhar.accounting.report.domain.Entry;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 
-@Component(value = "deserializer")
+@RequiredArgsConstructor
 public class DeserializerStrategy implements Deserializer {
 
   private final String checkingAccountIdentifier;
   private final String creditCardIdentifier;
   private final CheckingAccountEntryDeserializer checkingAccountEntryDeserializer;
   private final CreditCardEntryDeserializer creditCardEntryDeserializer;
-
-  @Autowired
-  public DeserializerStrategy(AccountingConfigurationProperties properties,
-      CheckingAccountEntryDeserializer checkingAccountEntryDeserializer,
-      CreditCardEntryDeserializer creditCardEntryDeserializer) {
-    this.checkingAccountIdentifier = properties.getCheckingAccountIdentifier();
-    this.creditCardIdentifier = properties.getCreditCardIdentifier();
-    this.checkingAccountEntryDeserializer = checkingAccountEntryDeserializer;
-    this.creditCardEntryDeserializer = creditCardEntryDeserializer;
-  }
 
   @Override
   public Stream<Entry> readStatement(List<String> lines) {

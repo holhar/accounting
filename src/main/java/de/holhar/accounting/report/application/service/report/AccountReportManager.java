@@ -8,9 +8,9 @@ import de.holhar.accounting.report.domain.EntryType;
 import de.holhar.accounting.report.domain.MonthlyReport;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 
-@Component
+@RequiredArgsConstructor
 public class AccountReportManager implements ReportManager {
 
   public static class ReportEntry {
@@ -36,11 +36,6 @@ public class AccountReportManager implements ReportManager {
 
   private final ReportCalculator reportCalculator;
   private final LoadStatementsPort loadStatementsPort;
-
-  public AccountReportManager(ReportCalculator reportCalculator, LoadStatementsPort loadStatementsPort) {
-    this.reportCalculator = reportCalculator;
-    this.loadStatementsPort = loadStatementsPort;
-  }
 
   public ReportEntry getReportDataSetEntry(LocalDate monthIterator) {
     LocalDate startDate = monthIterator.withDayOfMonth(1);

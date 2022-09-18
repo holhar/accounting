@@ -4,9 +4,7 @@ import de.holhar.accounting.report.domain.CostCentre;
 import de.holhar.accounting.report.domain.Entry;
 import de.holhar.accounting.report.domain.MonthlyReport;
 import java.math.BigDecimal;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ReportCalculator {
 
   public BigDecimal getExpenditure(MonthlyReport monthlyReport) {

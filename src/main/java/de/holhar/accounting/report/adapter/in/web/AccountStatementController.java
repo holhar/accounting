@@ -40,18 +40,4 @@ public class AccountStatementController {
     }
     return ResponseEntity.ok("Batch import successful");
   }
-
-  // TODO: Adjust endpoint to return file for download with de-sanitized files
-  @PostMapping("/de-sanitize")
-  public ResponseEntity<String> migrateType(@RequestParam("file") MultipartFile zipFile)
-      throws IOException {
-    List<Path> files = fileHandler.unpackZipFile(zipFile);
-    try {
-      csvDeSanitizationService.deSanitize(files);
-    } catch (Exception e) {
-      logger.error("Type migration failed", e);
-      return ResponseEntity.internalServerError().body("Type migration failed: " + e.getMessage());
-    }
-    return ResponseEntity.ok("Type migration successful");
-  }
 }

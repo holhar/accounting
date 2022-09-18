@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AccountingConfigurationProperties {
 
   private String importPath;
-  private String deSanitizationPath;
 
   private String checkingAccountIdentifier;
   private String creditCardIdentifier;

@@ -1,20 +1,19 @@
 package de.holhar.accounting.report.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import org.javamoney.moneta.Money;
 
 public class AnnualReport extends MonthlyReport {
 
   public AnnualReport(String friendlyName, int year) {
     super(friendlyName, LocalDate.of(year, Month.JANUARY, 1));
-    this.income = new BigDecimal("0");
-    this.expenditure = new BigDecimal("0");
-    this.investment = new BigDecimal("0");
+    this.income = Money.of(0, "EUR");
+    this.expenditure = Money.of(0, "EUR");
+    this.investment = Money.of(0, "EUR");
   }
 
-  public void addProfitAndExpenses(BigDecimal profit, BigDecimal expenditure,
-      BigDecimal investment) {
+  public void addProfitAndExpenses(Money profit, Money expenditure, Money investment) {
     this.income = this.income.add(profit);
     this.expenditure = this.expenditure.add(expenditure);
     this.investment = this.investment.add(investment);

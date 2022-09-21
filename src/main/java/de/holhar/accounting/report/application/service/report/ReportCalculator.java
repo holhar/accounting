@@ -3,18 +3,18 @@ package de.holhar.accounting.report.application.service.report;
 import de.holhar.accounting.report.domain.CostCentre;
 import de.holhar.accounting.report.domain.Entry;
 import de.holhar.accounting.report.domain.MonthlyReport;
-import java.math.BigDecimal;
+import org.javamoney.moneta.Money;
 
 public class ReportCalculator {
 
-  public BigDecimal getExpenditure(MonthlyReport monthlyReport) {
+  public Money getExpenditure(MonthlyReport monthlyReport) {
     return monthlyReport.getCostCentres().stream()
         .map(CostCentre::getAmount)
-        .reduce(new BigDecimal("0"), BigDecimal::add);
+        .reduce(Money.of(0, "EUR"), Money::add);
   }
 
-  public BigDecimal getProfit(MonthlyReport monthlyReport, Entry entry) {
-    if (entry.getAmount().compareTo(new BigDecimal("0")) < 0) {
+  public Money getProfit(MonthlyReport monthlyReport, Entry entry) {
+    if (entry.getAmount().isNegative()) {
       throw new IllegalArgumentException(
           "Given entry amount must be above zero (a profit), but was " + entry.getAmount());
     }

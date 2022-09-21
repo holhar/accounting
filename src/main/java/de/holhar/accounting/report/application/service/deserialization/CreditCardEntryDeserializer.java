@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Stream;
+import javax.money.Monetary;
+import org.javamoney.moneta.Money;
 
 public class CreditCardEntryDeserializer implements Deserializer {
 
@@ -32,22 +34,19 @@ public class CreditCardEntryDeserializer implements Deserializer {
     LocalDate valueDate = LocalDate.parse(entryFields.pop(), formatter);
     LocalDate receiptDate = LocalDate.parse(entryFields.pop(), formatter);
     String description = entryFields.pop();
-    String amountString = entryFields.pop().replace(".", "").replace(",", ".").trim();
-    // originalAmountString is null, blank, or contains some value I'm not interested in, so I set
-    // it to '0' so that its value can be used to create a BigDecimal
+
+    // TODO: Extract and write test
+    String amountString = entryFields.pop()
+        .replace(".", "")
+        .replace(",", "")
+        .replace("-", "")
+        .trim();
+    Money amount = Money.ofMinor(Monetary.getCurrency("EUR"), Long.parseLong(amountString));
+
+    // originalAmountString contains some irrelevant value, so just pop it out of the deque
     entryFields.pop();
-    var originalAmountString = "0";
     EntryType type = EntryType.fromValue(entryFields.getLast().isBlank() ? "" : entryFields.removeLast().trim());
 
-    CreditCardEntry entry = new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate,
-        description, new BigDecimal(amountString), new BigDecimal(originalAmountString), type);
-
-    if ((entry.isExpenditure() && entry.hasPositiveAmount())
-        || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
-      String errMsg = String.format("Entry '%s' is invalid: type '%s', amount '%s'",
-          entry.getDescription(), entry.getType().getValue(), entry.getAmount());
-      throw new IllegalStateException(errMsg);
-    }
-    return entry;
+    return new CreditCardEntry(billedAndNotIncluded, valueDate, receiptDate, description, amount, type);
   }
 }

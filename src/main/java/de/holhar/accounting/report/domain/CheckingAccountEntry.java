@@ -1,7 +1,6 @@
 package de.holhar.accounting.report.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.Type;
+import org.javamoney.moneta.Money;
 
 @Entity
 @Data
@@ -35,7 +37,10 @@ public class CheckingAccountEntry implements Entry {
   private String intendedUse;
   private String accountId;
   private String bankCode;
-  private BigDecimal amount;
+
+  @Columns(columns = {@Column(name = "amount_currency"), @Column(name = "amount_in_minor_unit")})
+  @Type(type = "org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyMinorAmountAndCurrency")
+  private Money amount;
   private String creditorId;
   private String clientReference;
   private String customerReference;
@@ -45,7 +50,7 @@ public class CheckingAccountEntry implements Entry {
 
   public CheckingAccountEntry(LocalDate bookingDate, LocalDate valueDate,
       String bookingText, String client, String intendedUse, String accountId,
-      String bankCode, BigDecimal amount, String creditorId, String clientReference,
+      String bankCode, Money amount, String creditorId, String clientReference,
       String customerReference, EntryType type) {
     this.bookingDate = bookingDate;
     this.valueDate = valueDate;

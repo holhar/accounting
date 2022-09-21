@@ -13,14 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-@RequiredArgsConstructor
 @UseCase
+@RequiredArgsConstructor
 public class AccountStatementService implements ImportAccountStatementsUseCase {
-
-  private static final Logger logger = LoggerFactory.getLogger(AccountStatementService.class);
 
   private final Sanitizer sanitizer;
   private final Deserializer deserializer;

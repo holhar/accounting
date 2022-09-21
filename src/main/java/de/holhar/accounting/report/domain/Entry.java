@@ -1,10 +1,10 @@
 package de.holhar.accounting.report.domain;
 
-import java.math.BigDecimal;
+import org.javamoney.moneta.Money;
 
 public interface Entry {
 
-  BigDecimal getAmount();
+  Money getAmount();
 
   EntryType getType();
 
@@ -16,10 +16,10 @@ public interface Entry {
   }
 
   default boolean hasPositiveAmount() {
-    return this.getAmount().compareTo(new BigDecimal("0")) >= 0;
+    return this.getAmount().isPositiveOrZero();
   }
 
   default boolean hasNegativeAmount() {
-    return this.getAmount().compareTo(new BigDecimal("0")) < 0;
+    return this.getAmount().isNegative();
   }
 }

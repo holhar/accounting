@@ -1,14 +1,14 @@
 package de.holhar.accounting.report.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.javamoney.moneta.Money;
 
 @Value
 @AllArgsConstructor
 public class Balance {
 
-  BigDecimal value;
+  Money amount;
   LocalDate date;
 }

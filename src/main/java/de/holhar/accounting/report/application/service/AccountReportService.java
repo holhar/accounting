@@ -13,7 +13,6 @@ import de.holhar.accounting.report.domain.EntryType;
 import de.holhar.accounting.report.domain.MonthlyReport;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,7 +163,7 @@ public class AccountReportService implements
   private String getCostCentreAmountFormatted(Map<EntryType, List<CostCentre>> cMap,
       EntryType type) {
     if (cMap.get(type) != null) {
-      BigDecimal amount = Optional.ofNullable(cMap.get(type).get(0)).orElse(new CostCentre(type))
+      Money amount = Optional.ofNullable(cMap.get(type).get(0)).orElse(new CostCentre(type))
           .getAmount();
       return df.format(amount);
     }

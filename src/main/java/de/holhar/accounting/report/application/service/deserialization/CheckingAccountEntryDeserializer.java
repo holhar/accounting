@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.money.Monetary;
+import org.javamoney.moneta.Money;
 
 public class CheckingAccountEntryDeserializer implements Deserializer {
 
@@ -45,20 +47,19 @@ public class CheckingAccountEntryDeserializer implements Deserializer {
     String intendedUse = entryFields.pop().trim();
     String accountId = entryFields.pop().trim();
     String bankCode = entryFields.pop().trim();
-    String amountString = entryFields.pop().replace(".", "").replace(",", ".").trim();
+
+    // TODO: Extract and write test
+    String amountString = entryFields.pop()
+        .replace(".", "")
+        .replace(",", "")
+        .trim();
+    Money amount = Money.ofMinor(Monetary.getCurrency("EUR"), Long.parseLong(amountString));
+
     String creditorId = entryFields.isEmpty() ? "" : entryFields.pop().trim();
     String clientReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
     String customerReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();
     EntryType type = EntryType.fromValue(entryFields.getLast().isBlank() ? "" : entryFields.removeLast().trim());
-    CheckingAccountEntry entry = new CheckingAccountEntry(bookingDate, valueDate, bookingText,
-        client, intendedUse, accountId, bankCode, new BigDecimal(amountString), creditorId, clientReference, customerReference, type);
-
-    if ((entry.isExpenditure() && entry.hasPositiveAmount())
-        || (entry.getType().equals(EntryType.INCOME) && entry.hasNegativeAmount())) {
-      String errMsg = String.format("Entry '%s' is invalid: type '%s', amount '%s'",
-          entry.getBookingText(), entry.getType().getValue(), entry.getAmount());
-      throw new IllegalStateException(errMsg);
-    }
-    return entry;
+    return new CheckingAccountEntry(bookingDate, valueDate, bookingText, client, intendedUse,
+        accountId, bankCode, amount, creditorId, clientReference, customerReference, type);
   }
 }

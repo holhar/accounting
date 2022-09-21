@@ -20,7 +20,12 @@
 
   <properties>
     <java.version>11</java.version>
-    <lombok.version>1.18.22</lombok.version>
+    <postgresql.version>42.5.0</postgresql.version>
+    <flyway-core.version>9.3.0</flyway-core.version>
+    <lombok.version>1.18.24</lombok.version>
+    <commons-csv.version>1.9.0</commons-csv.version>
+    <moneta.version>1.4.2</moneta.version>
+    <usertype-core.version>7.0.0.CR1</usertype-core.version>
   </properties>
 
   <dependencies>
@@ -40,20 +45,14 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.8</version>
-    </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
     </dependency>
 
     <dependency>
@@ -64,8 +63,33 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>${commons-csv.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.javamoney</groupId>
+      <artifactId>moneta</artifactId>
+      <version>${moneta.version}</version>
+      <type>pom</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jadira.usertype</groupId>
+      <artifactId>usertype.core</artifactId>
+      <version>${usertype-core.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

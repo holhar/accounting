@@ -2,13 +2,14 @@ version: '3'
 
 services:
 
-  fcicdb:
-    image: mysql:8.0.17
-    container_name: testdb
+  accounting_db:
+    image: 'postgres:14.5'
+    container_name: accounting_db
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: testdb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: accounting
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ./postgres-data:/var/lib/postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"

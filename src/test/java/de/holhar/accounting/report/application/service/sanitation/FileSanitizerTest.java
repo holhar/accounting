@@ -1,4 +1,4 @@
-package de.holhar.accounting.service.sanitation;
+package de.holhar.accounting.report.application.service.sanitation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -1,10 +1,9 @@
-package de.holhar.accounting.service;
+package de.holhar.accounting.report.application.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import de.holhar.accounting.report.adapter.out.persistence.MonthlyReportRepository;
-import de.holhar.accounting.report.application.service.AccountStatementService;
 import de.holhar.accounting.report.application.service.deserialization.Deserializer;
 import de.holhar.accounting.report.application.service.report.ReportManager;
 import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
@@ -14,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class AccountingServiceTest {
+class AccountStatementServiceTest {
 
   @InjectMocks
   private AccountStatementService accountStatementService;

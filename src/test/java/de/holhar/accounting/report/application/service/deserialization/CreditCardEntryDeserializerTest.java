@@ -1,4 +1,4 @@
-package de.holhar.accounting.service.deserialization;
+package de.holhar.accounting.report.application.service.deserialization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-class CreditCardStatementDeserializerTest {
+class CreditCardEntryDeserializerTest {
 
 //  @Test
 //  void readStatement() throws IOException {

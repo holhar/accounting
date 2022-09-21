@@ -1,4 +1,4 @@
-package de.holhar.accounting.service.deserialization;
+package de.holhar.accounting.report.application.service.deserialization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

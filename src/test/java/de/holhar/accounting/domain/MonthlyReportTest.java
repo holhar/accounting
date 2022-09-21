@@ -6,6 +6,7 @@ import de.holhar.accounting.report.domain.MonthlyReport;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 
 class MonthlyReportTest {
@@ -17,12 +18,12 @@ class MonthlyReportTest {
         LocalDate.of(2021, Month.NOVEMBER, 1)
     );
 
-    monthlyReport.setIncome(new BigDecimal("4321.23"));
-    monthlyReport.setExpenditure(new BigDecimal("-1834.34"));
+    monthlyReport.setIncome(Money.of(4321.23, "EUR"));
+    monthlyReport.setExpenditure(Money.of(-1834.34, "EUR"));
     monthlyReport.calcWinAndSavingRate();
 
-    assertEquals(new BigDecimal("2486.89"), monthlyReport.getWin());
-    assertEquals(new BigDecimal("57.55"), monthlyReport.getSavingRate());
+    assertEquals(Money.of(2486.89, "EUR"), monthlyReport.getWin());
+    assertEquals(Money.of(57.55, "EUR"), monthlyReport.getSavingRate());
   }
 
   @Test
@@ -31,11 +32,11 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.OCTOBER, 1)
     );
-    monthlyReport.setInvestment(new BigDecimal("111.11"));
+    monthlyReport.setInvestment(Money.of(111.11, "EUR"));
 
-    monthlyReport.addToInvestment(new BigDecimal("68.99"));
+    monthlyReport.addToInvestment(Money.of(68.99, "EUR"));
 
-    assertEquals(new BigDecimal("180.10"), monthlyReport.getInvestment());
+    assertEquals(Money.of(180.10, "EUR"), monthlyReport.getInvestment());
   }
 
   @Test
@@ -44,10 +45,10 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.OCTOBER, 1)
     );
-    monthlyReport.setInvestment(new BigDecimal("111.11"));
+    monthlyReport.setInvestment(Money.of(111.11, "EUR"));
 
-    monthlyReport.addToInvestment(new BigDecimal("-20.89"));
+    monthlyReport.addToInvestment(Money.of(-20.89, "EUR"));
 
-    assertEquals(new BigDecimal("132.00"), monthlyReport.getInvestment());
+    assertEquals(Money.of(132.00, "EUR"), monthlyReport.getInvestment());
   }
 }

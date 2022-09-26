@@ -34,7 +34,6 @@ public class AccountReportManager implements ReportManager {
     }
   }
 
-  private final ReportCalculator reportCalculator;
   private final LoadStatementsPort loadStatementsPort;
 
   public ReportEntry getReportDataSetEntry(LocalDate monthIterator) {
@@ -53,8 +52,8 @@ public class AccountReportManager implements ReportManager {
     calculateCosts(monthlyReport, checkingAccountEntries, creditCardEntries);
     calculateProfit(monthlyReport, checkingAccountEntries, creditCardEntries);
     calculateInvestments(monthlyReport, checkingAccountEntries);
-    monthlyReport.setExpenditure(reportCalculator.getExpenditure(monthlyReport));
-    monthlyReport.calcWinAndSavingRate();
+    monthlyReport.calculateExpenditure();
+    monthlyReport.calculateWinAndSavingRate();
 
     return monthlyReport;
   }
@@ -69,24 +68,22 @@ public class AccountReportManager implements ReportManager {
       List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries) {
     checkingAccountEntries.stream()
         .filter(Entry::isExpenditure)
-        .forEach(entry -> reportCalculator.addToCostCentres(monthlyReport, entry));
+        .forEach(monthlyReport::addToCostCentres);
 
     creditCardEntries.stream()
         .filter(Entry::isExpenditure)
-        .forEach(entry -> reportCalculator.addToCostCentres(monthlyReport, entry));
+        .forEach(monthlyReport::addToCostCentres);
   }
 
   private void calculateProfit(MonthlyReport monthlyReport,
       List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries) {
     checkingAccountEntries.stream()
         .filter(entry -> entry.getType().equals(EntryType.INCOME))
-        .forEach(
-            entry -> monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entry)));
+        .forEach(monthlyReport::addToIncome);
 
     creditCardEntries.stream()
         .filter(entry -> entry.getType().equals(EntryType.INCOME))
-        .forEach(
-            entry -> monthlyReport.setIncome(reportCalculator.getProfit(monthlyReport, entry)));
+        .forEach(monthlyReport::addToIncome);
   }
 
   private void calculateInvestments(MonthlyReport monthlyReport, List<CheckingAccountEntry> checkingAccountEntries) {

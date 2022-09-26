@@ -17,7 +17,7 @@ public class AnnualReport extends MonthlyReport {
     this.income = this.income.add(profit);
     this.expenditure = this.expenditure.add(expenditure);
     this.investment = this.investment.add(investment);
-    calcWinAndSavingRate();
+    calculateWinAndSavingRate();
   }
 
   @Override

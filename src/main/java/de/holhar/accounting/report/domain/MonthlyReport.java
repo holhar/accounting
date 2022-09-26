@@ -36,7 +36,6 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
   protected int year;
   private Month month;
 
-  // FIXME: JSON serialization of Money object for FE
   @Columns(columns = {@Column(name = "income_currency"), @Column(name = "income_in_minor_unit")})
   @Type(type = "org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyMinorAmountAndCurrency")
   protected Money income;
@@ -67,25 +66,54 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
   }
 
   // FIXME: Saving rate calculation
-  public void calcWinAndSavingRate() {
-    win = income.add(expenditure);
+  public void calculateWinAndSavingRate() {
+    win = income.subtract(expenditure);
     if (income.isNegative() || income.isPositive()) {
       savingRate = new BigDecimal("100.000000")
           .divide(income.getNumberStripped(), RoundingMode.DOWN)
           .multiply(win.getNumberStripped())
           .setScale(2, RoundingMode.HALF_UP);
     } else {
-      savingRate = new BigDecimal("0");
+      savingRate = BigDecimal.ZERO;
     }
   }
 
   // Incorporate transfer fees as well?
   public void addToInvestment(Money investment) {
-    // TODO: Why can the investment be negative?
     if (investment.isNegative()) {
-      investment = investment.multiply(new BigDecimal("-1"));
+      investment = investment.multiply(-1);
     }
     this.investment = this.investment.add(investment);
+  }
+
+  public void calculateExpenditure() {
+    Money expenditure = this.getCostCentres().stream()
+        .map(CostCentre::getAmount)
+        .reduce(Money.of(0, "EUR"), Money::add);
+    this.setExpenditure(expenditure);
+  }
+
+  public void addToIncome(Entry entry) {
+    if (entry.getAmount().isNegative()) {
+      throw new IllegalArgumentException(
+          "Given entry amount must be above zero (a profit), but was " + entry.getAmount());
+    }
+    this.setIncome(this.getIncome().add(entry.getAmount()));
+  }
+
+  public void addToCostCentres(Entry entry) {
+    CostCentre costCentre = new CostCentre(entry.getType());
+    costCentre.addAmount(entry.getAmount());
+    if (this.getCostCentres().contains(costCentre)) {
+      this.getCostCentres().stream()
+          .filter(c -> c.getEntryType().equals(costCentre.getEntryType()))
+          .findFirst()
+          .orElseThrow(() -> new IllegalArgumentException(
+              "Could not match given cost centre type " + costCentre.getEntryType()))
+          .addAmount(costCentre.getAmount());
+    } else {
+      this.getCostCentres().add(costCentre);
+    }
   }
 
   @Override

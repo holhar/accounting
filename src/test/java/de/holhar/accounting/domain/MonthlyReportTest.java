@@ -3,7 +3,6 @@ package de.holhar.accounting.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.holhar.accounting.report.domain.MonthlyReport;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import org.javamoney.moneta.Money;
@@ -20,7 +19,7 @@ class MonthlyReportTest {
 
     monthlyReport.setIncome(Money.of(4321.23, "EUR"));
     monthlyReport.setExpenditure(Money.of(-1834.34, "EUR"));
-    monthlyReport.calcWinAndSavingRate();
+    monthlyReport.calculateWinAndSavingRate();
 
     assertEquals(Money.of(2486.89, "EUR"), monthlyReport.getWin());
     assertEquals(Money.of(57.55, "EUR"), monthlyReport.getSavingRate());

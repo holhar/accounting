@@ -11,7 +11,6 @@ import de.holhar.accounting.report.application.service.deserialization.CreditCar
 import de.holhar.accounting.report.application.service.deserialization.Deserializer;
 import de.holhar.accounting.report.application.service.deserialization.DeserializerStrategy;
 import de.holhar.accounting.report.application.service.report.AccountReportManager;
-import de.holhar.accounting.report.application.service.report.ReportCalculator;
 import de.holhar.accounting.report.application.service.sanitation.FileSanitizer;
 import java.text.SimpleDateFormat;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,16 +34,8 @@ public class AccountingConfiguration {
   }
 
   @Bean
-  public AccountReportManager accountReportManager(
-      ReportCalculator reportCalculator,
-      LoadStatementsPort loadStatementsPort
-  ) {
-    return new AccountReportManager(reportCalculator, loadStatementsPort);
-  }
-
-  @Bean
-  public ReportCalculator reportCalculator() {
-    return new ReportCalculator();
+  public AccountReportManager accountReportManager(LoadStatementsPort loadStatementsPort) {
+    return new AccountReportManager(loadStatementsPort);
   }
 
   @Bean

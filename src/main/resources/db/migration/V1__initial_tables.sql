@@ -17,6 +17,9 @@ create table checking_account_entry
   primary key (id)
 );
 
+create unique index unique_checking_account_entry_constraint
+  on checking_account_entry(booking_date, amount_in_minor_unit, client, customer_reference);
+
 create table credit_card_entry 
 (
   id  bigserial not null,
@@ -30,7 +33,10 @@ create table credit_card_entry
   primary key (id)
 );
 
-create table accounting_schema.monthly_report
+create unique index unique_credit_card_entry_constraint
+  on credit_card_entry(receipt_date, amount_in_minor_unit, description);
+
+create table monthly_report
 (
   id  bigserial not null,
   expenditure_currency varchar(255),
@@ -47,6 +53,9 @@ create table accounting_schema.monthly_report
   year int4 not null,
   primary key (id)
 );
+
+create unique index unique_monthly_report_constraint
+  on monthly_report(month, year);
 
 create table monthly_report_cost_centres 
 (

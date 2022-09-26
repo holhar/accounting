@@ -30,7 +30,7 @@ public class AccountReportController {
     return loadReportsPort.loadAllMonthlyReports();
   }
 
-  @GetMapping(produces = "text/csv")
+  @GetMapping(value = "/csv", produces = "text/csv")
   public ResponseEntity<String> downloadMonthlyReports() throws IOException {
     String csvReport = downloadMonthlyReportsCsvUseCase.downloadCsvReport();
     return ResponseEntity.ok(csvReport);

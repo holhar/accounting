@@ -113,11 +113,11 @@ public class AccountReportService implements
       }
       csvPrinter.printRecord();
       for (AnnualReport a : annualReportList) {
-        String incomeString = df.format(a.getIncome());
-        String expenditureString = df.format(a.getExpenditure());
-        String winString = df.format(a.getWin());
+        String incomeString = toNumberString(a.getIncome());
+        String expenditureString = toNumberString(a.getExpenditure());
+        String winString = toNumberString(a.getWin());
         String savingRateString = df.format(a.getSavingRate());
-        String investmentString = df.format(a.getInvestment());
+        String investmentString = toNumberString(a.getInvestment());
         csvPrinter.printRecord(a.getFriendlyName(), a.getYear(), "----", incomeString,
             expenditureString, winString, savingRateString, investmentString);
       }
@@ -129,11 +129,11 @@ public class AccountReportService implements
   private void processReports(CSVPrinter csvPrinter, List<MonthlyReport> reportSet,
       AnnualReport annualReport) throws IOException {
     for (MonthlyReport r : reportSet) {
-      String incomeString = df.format(r.getIncome());
-      String expenditureString = df.format(r.getExpenditure());
-      String varString = df.format(r.getWin());
+      String incomeString = toNumberString(r.getIncome());
+      String expenditureString = toNumberString(r.getExpenditure());
+      String varString = toNumberString(r.getWin());
       String savingRateString = df.format(r.getSavingRate());
-      String investment = df.format(r.getInvestment());
+      String investment = toNumberString(r.getInvestment());
       Map<EntryType, List<CostCentre>> cMap = getCostCentresAsMap(r.getCostCentres());
       csvPrinter.printRecord(
           r.getFriendlyName(),
@@ -160,12 +160,10 @@ public class AccountReportService implements
     return costCentres.stream().collect(Collectors.groupingBy(CostCentre::getEntryType));
   }
 
-  private String getCostCentreAmountFormatted(Map<EntryType, List<CostCentre>> cMap,
-      EntryType type) {
+  private String getCostCentreAmountFormatted(Map<EntryType, List<CostCentre>> cMap, EntryType type) {
     if (cMap.get(type) != null) {
-      Money amount = Optional.ofNullable(cMap.get(type).get(0)).orElse(new CostCentre(type))
-          .getAmount();
-      return df.format(amount);
+      Money amount = Optional.ofNullable(cMap.get(type).get(0)).orElse(new CostCentre(type)).getAmount();
+      return toNumberString(amount);
     }
     return "0";
   }
@@ -173,6 +171,10 @@ public class AccountReportService implements
   private boolean monthlyReportIsPresent(LocalDate monthIterator) {
     return loadReportsPort.loadMonthlyReportByYearAndMonth(monthIterator.getYear(),
         monthIterator.getMonth()).isPresent();
+  }
+
+  private String toNumberString(Money amount) {
+    return amount.toString().replace("EUR ", "");
   }
 
 }

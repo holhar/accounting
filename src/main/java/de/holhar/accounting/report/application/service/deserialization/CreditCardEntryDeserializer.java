@@ -35,11 +35,13 @@ public class CreditCardEntryDeserializer implements Deserializer {
     LocalDate receiptDate = LocalDate.parse(entryFields.pop(), formatter);
     String description = entryFields.pop();
 
-    // TODO: Extract and write test
-    String amountString = entryFields.pop()
-        .replace(".", "")
+    // TODO: Extract, simplify, and write test
+    String amountString = entryFields.pop();
+    if (!amountString.contains(",")) {
+      amountString = amountString + ",00";
+    }
+    amountString = amountString.replace(".", "")
         .replace(",", "")
-        .replace("-", "")
         .trim();
     Money amount = Money.ofMinor(Monetary.getCurrency("EUR"), Long.parseLong(amountString));
 

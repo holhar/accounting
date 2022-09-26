@@ -48,9 +48,12 @@ public class CheckingAccountEntryDeserializer implements Deserializer {
     String accountId = entryFields.pop().trim();
     String bankCode = entryFields.pop().trim();
 
-    // TODO: Extract and write test
-    String amountString = entryFields.pop()
-        .replace(".", "")
+    // TODO: Extract, simplify, and write test
+    String amountString = entryFields.pop();
+    if (!amountString.contains(",")) {
+      amountString = amountString + ",00";
+    }
+    amountString = amountString.replace(".", "")
         .replace(",", "")
         .trim();
     Money amount = Money.ofMinor(Monetary.getCurrency("EUR"), Long.parseLong(amountString));

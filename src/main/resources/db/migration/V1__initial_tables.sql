@@ -51,7 +51,8 @@ create table accounting_schema.monthly_report
 create table monthly_report_cost_centres 
 (
   monthly_report_id int8 not null,
-  amount bytea,
+  amount_currency varchar(255),
+  amount_in_minor_unit int8,
   entry_type varchar(255)
 );
 

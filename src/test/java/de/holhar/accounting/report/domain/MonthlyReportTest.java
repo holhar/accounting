@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.holhar.accounting.TestUtils;
+import de.holhar.accounting.common.MoneyUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
-import javax.money.Monetary;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 
@@ -22,12 +22,12 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.NOVEMBER, 1)
     );
-    monthlyReport.setIncome(Money.of(4321.23, "EUR"));
-    monthlyReport.setExpenditure(Money.of(1834.34, "EUR"));
+    monthlyReport.setIncome(MoneyUtils.ofMinor(432_123L));
+    monthlyReport.setExpenditure(MoneyUtils.ofMinor(183_434L));
 
     monthlyReport.calculateWinAndSavingRate();
 
-    assertEquals(Money.of(2486.89, "EUR"), monthlyReport.getWin());
+    assertEquals(MoneyUtils.ofMinor(248_689L), monthlyReport.getWin());
     assertEquals(new BigDecimal("57.55").setScale(2, RoundingMode.HALF_UP), monthlyReport.getSavingRate());
   }
 
@@ -36,8 +36,8 @@ class MonthlyReportTest {
     var monthlyReport = new MonthlyReport("2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.NOVEMBER, 1)
     );
-    monthlyReport.setIncome(Money.of(0, "EUR"));
-    monthlyReport.setExpenditure(Money.of(0, "EUR"));
+    monthlyReport.setIncome(MoneyUtils.ZERO);
+    monthlyReport.setExpenditure(MoneyUtils.ZERO);
 
     monthlyReport.calculateWinAndSavingRate();
 
@@ -50,11 +50,11 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.OCTOBER, 1)
     );
-    monthlyReport.setInvestment(Money.of(111.11, "EUR"));
+    monthlyReport.setInvestment(MoneyUtils.ofMinor(11_111L));
 
-    monthlyReport.addToInvestment(Money.of(68.99, "EUR"));
+    monthlyReport.addToInvestment(MoneyUtils.ofMinor(6_899L));
 
-    assertEquals(Money.of(180.10, "EUR"), monthlyReport.getInvestment());
+    assertEquals(MoneyUtils.ofMinor(18_010), monthlyReport.getInvestment());
   }
 
   @Test
@@ -63,11 +63,11 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.OCTOBER, 1)
     );
-    monthlyReport.setInvestment(Money.of(111.11, "EUR"));
+    monthlyReport.setInvestment(MoneyUtils.ofMinor(11_111));
 
-    monthlyReport.addToInvestment(Money.of(-20.89, "EUR"));
+    monthlyReport.addToInvestment(MoneyUtils.ofMinor(-2_089L));
 
-    assertEquals(Money.of(132.00, "EUR"), monthlyReport.getInvestment());
+    assertEquals(MoneyUtils.ofMinor(13_200L), monthlyReport.getInvestment());
   }
 
   @Test
@@ -76,19 +76,19 @@ class MonthlyReportTest {
         "2021_11_CHECKING_ACCOUNT_STATEMENT",
         LocalDate.of(2021, Month.NOVEMBER, 1)
     );
-    monthlyReport.setIncome(Money.of(4321.23, "EUR"));
-    monthlyReport.setExpenditure(Money.of(1834.34, "EUR"));
+    monthlyReport.setIncome(MoneyUtils.ofMinor(432_123L));
+    monthlyReport.setExpenditure(MoneyUtils.ofMinor(183_434L));
 
     CostCentre costCentre1 = new CostCentre(EntryType.FOOD_AND_DRUGSTORE);
-    costCentre1.addAmount(Money.of(-100.82, "EUR"));
+    costCentre1.addAmount(MoneyUtils.ofMinor(-10_082L));
     monthlyReport.getCostCentres().add(costCentre1);
     CostCentre costCentre2 = new CostCentre(EntryType.ACCOMMODATION_AND_COMMUNICATION);
-    costCentre2.addAmount(Money.of(-1084.21, "EUR"));
+    costCentre2.addAmount(MoneyUtils.ofMinor(-108_421L));
     monthlyReport.getCostCentres().add(costCentre2);
 
     monthlyReport.calculateExpenditure();
 
-    assertEquals(Money.of(1185.03, "EUR"), monthlyReport.getExpenditure());
+    assertEquals(MoneyUtils.ofMinor(118_503L), monthlyReport.getExpenditure());
   }
 
   @Test
@@ -108,7 +108,7 @@ class MonthlyReportTest {
     monthlyReport.addToIncome(entries.get(1));
     monthlyReport.addToIncome(entries.get(2));
 
-    assertEquals(Money.of(2483.97, "EUR"), monthlyReport.getIncome());
+    assertEquals(MoneyUtils.ofMinor(248_397L), monthlyReport.getIncome());
   }
 
   @Test
@@ -149,7 +149,7 @@ class MonthlyReportTest {
         .findFirst()
         .orElseThrow(() -> new IllegalStateException(
             "Should contain LEISURE_ACTIVITIES_AND_PURCHASES cost centre"));
-    Money expectedAmount = Money.ofMinor(Monetary.getCurrency("EUR"), 18_282L);
+    Money expectedAmount = MoneyUtils.ofMinor(18_282L);
     assertEquals(expectedAmount, actualAmount);
   }
 }

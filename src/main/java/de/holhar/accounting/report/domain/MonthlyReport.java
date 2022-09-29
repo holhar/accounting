@@ -1,6 +1,7 @@
 package de.holhar.accounting.report.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.holhar.accounting.common.MoneyUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -58,10 +59,10 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
     this.friendlyName = friendlyName;
     this.month = date.getMonth();
     this.year = date.getYear();
-    this.income = Money.of(0, "EUR");
-    this.investment = Money.of(0, "EUR");
-    this.expenditure = Money.of(0, "EUR");
-    this.win = Money.of(0, "EUR");
+    this.income = MoneyUtils.ZERO;
+    this.investment = MoneyUtils.ZERO;
+    this.expenditure = MoneyUtils.ZERO;
+    this.win = MoneyUtils.ZERO;
     this.savingRate = new BigDecimal("0");
   }
 
@@ -88,7 +89,7 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
   public void calculateExpenditure() {
     Money expend = this.getCostCentres().stream()
         .map(CostCentre::getAmount)
-        .reduce(Money.of(0, "EUR"), Money::add);
+        .reduce(MoneyUtils.ZERO, Money::add);
     this.setExpenditure(expend);
   }
 

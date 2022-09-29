@@ -1,5 +1,6 @@
 package de.holhar.accounting.report.domain;
 
+import de.holhar.accounting.common.MoneyUtils;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -22,7 +23,7 @@ public class CostCentre implements Comparable<CostCentre> {
 
   @Columns(columns = {@Column(name = "amount_currency"), @Column(name = "amount_in_minor_unit")})
   @Type(type = "org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyMinorAmountAndCurrency")
-  private Money amount = Money.of(0, "EUR");
+  private Money amount = MoneyUtils.ZERO;
 
   public CostCentre(EntryType entryType) {
     this.entryType = entryType;

@@ -1,9 +1,9 @@
 package de.holhar.accounting.report.application.service.deserialization;
 
+import de.holhar.accounting.common.MoneyUtils;
 import de.holhar.accounting.report.domain.CheckingAccountEntry;
 import de.holhar.accounting.report.domain.Entry;
 import de.holhar.accounting.report.domain.EntryType;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import javax.money.Monetary;
 import org.javamoney.moneta.Money;
 
 public class CheckingAccountEntryDeserializer implements Deserializer {
@@ -56,7 +55,7 @@ public class CheckingAccountEntryDeserializer implements Deserializer {
     amountString = amountString.replace(".", "")
         .replace(",", "")
         .trim();
-    Money amount = Money.ofMinor(Monetary.getCurrency("EUR"), Long.parseLong(amountString));
+    Money amount = MoneyUtils.ofMinor(Long.parseLong(amountString));
 
     String creditorId = entryFields.isEmpty() ? "" : entryFields.pop().trim();
     String clientReference = entryFields.isEmpty() ? "" : entryFields.pop().trim();

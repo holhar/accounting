@@ -65,7 +65,6 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
     this.savingRate = new BigDecimal("0");
   }
 
-  // FIXME: Saving rate calculation
   public void calculateWinAndSavingRate() {
     win = income.subtract(expenditure);
     if (income.isNegative() || income.isPositive()) {
@@ -87,10 +86,10 @@ public class MonthlyReport implements Comparable<MonthlyReport> {
   }
 
   public void calculateExpenditure() {
-    Money expenditure = this.getCostCentres().stream()
+    Money expend = this.getCostCentres().stream()
         .map(CostCentre::getAmount)
         .reduce(Money.of(0, "EUR"), Money::add);
-    this.setExpenditure(expenditure);
+    this.setExpenditure(expend);
   }
 
   public void addToIncome(Entry entry) {

@@ -3,6 +3,7 @@ package de.holhar.accounting;
 import de.holhar.accounting.report.domain.CheckingAccountEntry;
 import de.holhar.accounting.report.domain.EntryType;
 import java.math.BigDecimal;
+import javax.money.Monetary;
 import org.javamoney.moneta.Money;
 
 public class TestUtils {
@@ -16,14 +17,16 @@ public class TestUtils {
         "intendedUse", null, null, null, null, null, null, null);
   }
 
-  public static CheckingAccountEntry getCheckingAccountEntryAmountOnly(String amount) {
+  public static CheckingAccountEntry getCheckingAccountEntryAmountOnly(long amount) {
+    Money moneyAmount = Money.ofMinor(Monetary.getCurrency("EUR"), amount);
     return new CheckingAccountEntry(null, null, null, null,
-        "intendedUse", null, null, Money.of(new BigDecimal(amount), "EUR"), null, null, null, null);
+        "intendedUse", null, null, moneyAmount, null, null, null, null);
   }
 
-  public static CheckingAccountEntry getCheckingAccountEntryAmountAndClientOnly(String amount,
+  public static CheckingAccountEntry getCheckingAccountEntryAmountAndClientOnly(long amount,
       String client, EntryType type) {
+    Money moneyAmount = Money.ofMinor(Monetary.getCurrency("EUR"), amount);
     return new CheckingAccountEntry(null, null, null, client,
-        "intendedUse", null, null, Money.of(new BigDecimal(amount), "EUR"), null, null, null, type);
+        "intendedUse", null, null, moneyAmount, null, null, null, type);
   }
 }

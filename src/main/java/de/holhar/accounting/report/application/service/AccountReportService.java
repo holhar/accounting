@@ -74,8 +74,7 @@ public class AccountReportService implements
     LocalDate monthIterator = reportStartDate;
     AccountReportManager.ReportEntry reportData = accountReportManager.getReportDataSetEntry(monthIterator);
 
-    while (!reportData.getCheckingAccountEntries().isEmpty()
-        && !reportData.getCreditCardEntries().isEmpty()) {
+    while (!reportData.getCheckingAccountEntries().isEmpty()) {
 
       if (monthlyReportIsPresent(monthIterator)) {
         logger.info("Report is present for date '{}' -> continue", reportStartDate);

@@ -167,11 +167,21 @@ $ java -jar accounting.jar
 
 Create zip file:
 
-    $ zip -r statements.zip .
+    $ zip -r 1_import.zip .
 
 Upload the data:
 
     $ curl -X POST \
         -H'content-type:multipart/form-data' \
-        -F 'file=@statements.zip' \
+        -F 'file=@1_import.zip' \
         'http://localhost:8080/statements/import'
+
+### Create and download reports
+
+Create reports:
+
+    $ curl -X POST 'http://localhost:8080/reports'
+
+Download reports:
+
+    $ curl -X GET 'http://localhost:8080/reports/csv' -H"Content-Type: text/csv" > report_2022_12_02_1432.csv

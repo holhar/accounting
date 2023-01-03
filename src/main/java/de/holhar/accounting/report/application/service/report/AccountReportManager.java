@@ -44,8 +44,11 @@ public class AccountReportManager implements ReportManager {
     return new ReportEntry(checkingAccountEntries, creditCardEntries);
   }
 
-  public MonthlyReport createMonthlyReport(final LocalDate statementDate,
-      List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries) {
+  public MonthlyReport createMonthlyReport(
+      final LocalDate statementDate,
+      List<CheckingAccountEntry> checkingAccountEntries,
+      List<CreditCardEntry> creditCardEntries
+  ) {
     // TODO: Validate input params
     MonthlyReport monthlyReport = new MonthlyReport(getFriendlyName(statementDate), statementDate);
 
@@ -64,8 +67,11 @@ public class AccountReportManager implements ReportManager {
     return statementDate.getYear() + "_" + month + "_REPORT";
   }
 
-  private void calculateCosts(MonthlyReport monthlyReport,
-      List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries) {
+  private void calculateCosts(
+      MonthlyReport monthlyReport,
+      List<CheckingAccountEntry> checkingAccountEntries,
+      List<CreditCardEntry> creditCardEntries
+  ) {
     checkingAccountEntries.stream()
         .filter(Entry::isExpenditure)
         .forEach(monthlyReport::addToCostCentres);
@@ -75,8 +81,11 @@ public class AccountReportManager implements ReportManager {
         .forEach(monthlyReport::addToCostCentres);
   }
 
-  private void calculateProfit(MonthlyReport monthlyReport,
-      List<CheckingAccountEntry> checkingAccountEntries, List<CreditCardEntry> creditCardEntries) {
+  private void calculateProfit(
+      MonthlyReport monthlyReport,
+      List<CheckingAccountEntry> checkingAccountEntries,
+      List<CreditCardEntry> creditCardEntries
+  ) {
     checkingAccountEntries.stream()
         .filter(entry -> entry.getType().equals(EntryType.INCOME))
         .forEach(monthlyReport::addToIncome);
@@ -86,7 +95,10 @@ public class AccountReportManager implements ReportManager {
         .forEach(monthlyReport::addToIncome);
   }
 
-  private void calculateInvestments(MonthlyReport monthlyReport, List<CheckingAccountEntry> checkingAccountEntries) {
+  private void calculateInvestments(
+      MonthlyReport monthlyReport,
+      List<CheckingAccountEntry> checkingAccountEntries
+  ) {
     checkingAccountEntries.stream()
         .filter(entry -> entry.getType().equals(EntryType.DEPOT_TRANSFER))
         .forEach(entry -> monthlyReport.addToInvestment(entry.getAmount()));

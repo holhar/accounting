@@ -51,10 +51,10 @@ class AccountReportManagerTest {
 
   private List<CreditCardEntry> getCreditCardEntries() {
     List<CreditCardEntry> creditCardEntries = new ArrayList<>();
-    creditCardEntries.add(TestUtils.getCreditCardEntry(20000L, "CHECKING_ACCOUNT_ID", EntryType.INCOME));
-    creditCardEntries.add(TestUtils.getCreditCardEntry(-1000L, "cinema", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
-    creditCardEntries.add(TestUtils.getCreditCardEntry(-2596L, "restaurant", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
-    creditCardEntries.add(TestUtils.getCreditCardEntry(-999L, "music provider", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
+    creditCardEntries.add(TestUtils.getCreditCardEntry(20000L, EntryType.INCOME));
+    creditCardEntries.add(TestUtils.getCreditCardEntry(-1000L, EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
+    creditCardEntries.add(TestUtils.getCreditCardEntry(-2596L, EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
+    creditCardEntries.add(TestUtils.getCreditCardEntry(-999L, EntryType.LEISURE_ACTIVITIES_AND_PURCHASES));
     return creditCardEntries;
   }
 

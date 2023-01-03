@@ -62,7 +62,7 @@ class AccountStatementServiceTest {
 
     CheckingAccountEntry checkingAccountEntry = TestUtils.getCheckAccEntry(-1000L, "foo", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES);
     Stream<Entry> checkingAccountEntries = Stream.of(checkingAccountEntry);
-    CreditCardEntry creditCardEntry = TestUtils.getCreditCardEntry(-100L, "bar", EntryType.FOOD_AND_DRUGSTORE);
+    CreditCardEntry creditCardEntry = TestUtils.getCreditCardEntry(-100L, EntryType.FOOD_AND_DRUGSTORE);
     Stream<Entry> creditCardEntries = Stream.of(creditCardEntry);
 
     when(deserializer.readStatement(checkAccountStatementLines)).thenReturn(checkingAccountEntries);

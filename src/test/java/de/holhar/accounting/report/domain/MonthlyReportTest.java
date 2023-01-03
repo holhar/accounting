@@ -134,9 +134,9 @@ class MonthlyReportTest {
         LocalDate.of(2021, Month.NOVEMBER, 1)
     );
 
-    Entry entry1 = TestUtils.getCheckingAccountEntryAmountAndClientOnly(-6_999L,
+    Entry entry1 = TestUtils.getCheckAccEntry(-6_999L,
         "XX sportsEquipment YY", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES);
-    Entry entry2 = TestUtils.getCheckingAccountEntryAmountAndClientOnly(-11_283L,
+    Entry entry2 = TestUtils.getCheckAccEntry(-11_283L,
         "XX sportsEquipment ZZ", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES);
 
     monthlyReport.addToCostCentres(entry1);

@@ -1,7 +1,6 @@
 package de.holhar.accounting.report.application.service.sanitation;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -13,9 +12,8 @@ public class FileSanitizer implements Sanitizer {
   @Override
   public List<String> sanitize(Path path) {
     try {
-      return Files.readAllLines(path, StandardCharsets.ISO_8859_1)
+      return Files.readAllLines(path)
           .stream()
-          .map(line -> new String(line.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.ISO_8859_1))
           .map(line -> line.replace("\"", ""))
           .map(line -> line.replaceAll("\\s\\s+", " "))
           .map(line -> line.replaceAll("^;;+$", ";"))

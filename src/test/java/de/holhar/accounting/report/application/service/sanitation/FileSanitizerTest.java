@@ -2,21 +2,16 @@ package de.holhar.accounting.report.application.service.sanitation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class FileSanitizerTest {
 
-  @Autowired
-  private Sanitizer fileSanitizer;
+  private final Sanitizer fileSanitizer = new FileSanitizer();
 
   @Test
   void cleanUp_accountingStatement_Succeeds() throws IOException {

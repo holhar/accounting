@@ -1,13 +1,27 @@
 package de.holhar.accounting.report.application.service;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import de.holhar.accounting.report.adapter.out.persistence.MonthlyReportRepository;
+import de.holhar.accounting.TestUtils;
+import de.holhar.accounting.report.application.port.out.SaveStatementsPort;
 import de.holhar.accounting.report.application.service.deserialization.Deserializer;
-import de.holhar.accounting.report.application.service.report.ReportManager;
 import de.holhar.accounting.report.application.service.sanitation.Sanitizer;
+import de.holhar.accounting.report.domain.CheckingAccountEntry;
+import de.holhar.accounting.report.domain.CreditCardEntry;
+import de.holhar.accounting.report.domain.Entry;
+import de.holhar.accounting.report.domain.EntryType;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,42 +39,47 @@ class AccountStatementServiceTest {
   private Deserializer deserializer;
 
   @Mock
-  private ReportManager reportManager;
+  private SaveStatementsPort saveStatementsPort;
 
-  @Mock
-  private MonthlyReportRepository repository;
+  @Captor
+  private ArgumentCaptor<List<CheckingAccountEntry>> checkingAccountEntriesCaptor;
 
-//  @Test
-//  void createReport() throws IOException {
-//    List<String> accountStatementLines = Collections.singletonList("AccountStatement");
-//
-//    AccountStatement accountStatement = new AccountStatement(
-//        "CHECKING_ACCOUNT_ID",
-//        AccountStatement.Type.CHECKING_ACCOUNT,
-//        LocalDate.of(2021, Month.NOVEMBER, 4),
-//        LocalDate.of(2021, Month.DECEMBER, 3),
-//        new Balance(new BigDecimal("10000.01"), LocalDate.of(2021, Month.NOVEMBER, 4)),
-//        Collections.singletonList(
-//            TestUtils.getCheckingAccountEntryAmountAndClientOnly("-10.00", "foobar",
-//                EntryType.FOOD_AND_DRUGSTORE)));
-//
-//    MonthlyReport monthlyReport = new MonthlyReport(
-//        "2021_11_CHECKING_ACCOUNT_STATEMENT",
-//        LocalDate.of(2021, Month.NOVEMBER, 1)
-//    );
-//    monthlyReport.setIncome(new BigDecimal("4321.23"));
-//    monthlyReport.setExpenditure(new BigDecimal("-1834.34"));
-//
-//    when(sanitizer.cleanUp(any(Path.class))).thenReturn(accountStatementLines);
-//    when(deserializer.readStatement(accountStatementLines)).thenReturn(accountStatement);
-//    when(reportManager.createMonthlyReport(any(LocalDate.class), anySet())).thenReturn(
-//        monthlyReport);
-//
-//    accountStatementService.createReport(Paths.get("src/test/resources/accounting/unprocessed/"));
-//
-//    verify(sanitizer, times(2)).cleanUp(any(Path.class));
-//    verify(deserializer, times(2)).readStatement(accountStatementLines);
-//    verify(reportManager).createMonthlyReport(any(LocalDate.class), anySet());
-//    verify(repository).save(monthlyReport);
-//  }
+  @Captor
+  private ArgumentCaptor<List<CreditCardEntry>> creditCardEntriesCaptor;
+
+  @Test
+  void createReport() {
+    // Given
+    Path accPath = Paths.get("src/test/resources/accounting/unprocessed/acc_202001");
+    Path crePath = Paths.get("src/test/resources/accounting/unprocessed/cre_202001");
+    List<Path> paths = Arrays.asList(accPath, crePath);
+
+    List<String> checkAccountStatementLines = Collections.singletonList("AccountStatement");
+    List<String> creditCardStatementLines = Collections.singletonList("CreditCardStatement");
+
+    when(sanitizer.sanitize(accPath)).thenReturn(checkAccountStatementLines);
+    when(sanitizer.sanitize(crePath)).thenReturn(creditCardStatementLines);
+
+    CheckingAccountEntry checkingAccountEntry = TestUtils.getCheckAccEntry(-1000L, "foo", EntryType.LEISURE_ACTIVITIES_AND_PURCHASES);
+    Stream<Entry> checkingAccountEntries = Stream.of(checkingAccountEntry);
+    CreditCardEntry creditCardEntry = TestUtils.getCreditCardEntry(-100L, "bar", EntryType.FOOD_AND_DRUGSTORE);
+    Stream<Entry> creditCardEntries = Stream.of(creditCardEntry);
+
+    when(deserializer.readStatement(checkAccountStatementLines)).thenReturn(checkingAccountEntries);
+    when(deserializer.readStatement(creditCardStatementLines)).thenReturn(creditCardEntries);
+
+    // When
+    accountStatementService.importStatements(paths);
+
+    // Then
+    verify(saveStatementsPort).saveAllCheckingAccountEntries(checkingAccountEntriesCaptor.capture());
+    List<CheckingAccountEntry> actualCheckingAccountEntries = checkingAccountEntriesCaptor.getValue();
+    assertThat(actualCheckingAccountEntries.size()).isEqualTo(1);
+    assertThat(actualCheckingAccountEntries.get(0)).isEqualTo(checkingAccountEntry);
+
+    verify(saveStatementsPort).saveAllCreditCardEntries(creditCardEntriesCaptor.capture());
+    List<CreditCardEntry> actualCreditCardEntries = creditCardEntriesCaptor.getValue();
+    assertThat(actualCreditCardEntries.size()).isEqualTo(1);
+    assertThat(actualCreditCardEntries.get(0)).isEqualTo(creditCardEntry);
+  }
 }

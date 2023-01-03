@@ -36,8 +36,8 @@ public class AccountStatementService implements ImportAccountStatementsUseCase {
       } else if (entry instanceof CheckingAccountEntry) {
         checkingAccountEntries.add((CheckingAccountEntry) entry);
       }
-      saveStatementsPort.saveAllCheckingAccountEntries(checkingAccountEntries);
-      saveStatementsPort.saveAllCreditCardEntries(creditCardEntries);
     }
+    saveStatementsPort.saveAllCheckingAccountEntries(checkingAccountEntries);
+    saveStatementsPort.saveAllCreditCardEntries(creditCardEntries);
   }
 }

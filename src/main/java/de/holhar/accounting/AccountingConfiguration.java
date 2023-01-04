@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Primary;
 import org.zalando.jackson.datatype.money.MoneyModule;
 
 @Configuration
-@EnableConfigurationProperties({AccountingConfigurationProperties.class})
+@EnableConfigurationProperties({AccountingConfigProperties.class})
 public class AccountingConfiguration {
 
   @Bean
@@ -50,7 +50,7 @@ public class AccountingConfiguration {
 
   @Bean
   public Deserializer deserializer(
-      AccountingConfigurationProperties properties,
+      AccountingConfigProperties properties,
       CheckingAccountEntryDeserializer accountStatementDeserializer,
       CreditCardEntryDeserializer creditCardStatementDeserializer
   ) {

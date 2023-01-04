@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
-import de.holhar.accounting.AccountingConfigurationProperties;
-import de.holhar.accounting.report.application.service.deserialization.CheckingAccountEntryDeserializer;
-import de.holhar.accounting.report.application.service.deserialization.CreditCardEntryDeserializer;
-import de.holhar.accounting.report.application.service.deserialization.DeserializerStrategy;
+import de.holhar.accounting.AccountingConfigProperties;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +28,7 @@ class DeserializerStrategyTest {
   private CheckingAccountEntryDeserializer checkingAccountEntryDeserializer;
 
   @Mock
-  private AccountingConfigurationProperties accountingConfigurationProperties;
+  private AccountingConfigProperties accountingConfigProperties;
 
   @BeforeEach
   public void init() {

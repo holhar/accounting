@@ -1,6 +1,6 @@
 package de.holhar.accounting.report.application.service;
 
-import de.holhar.accounting.AccountingConfigurationProperties;
+import de.holhar.accounting.AccountingConfigProperties;
 import de.holhar.accounting.common.UseCase;
 import de.holhar.accounting.report.application.port.in.CreateMonthlyReportsUseCase;
 import de.holhar.accounting.report.application.port.in.DownloadMonthlyReportsCsvUseCase;
@@ -52,17 +52,17 @@ public class AccountReportService implements
       LoadReportsPort loadReportsPort,
       SaveReportsPort saveReportsPort,
       AccountReportManager accountReportManager,
-      AccountingConfigurationProperties accountingConfigurationProperties
+      AccountingConfigProperties accountingConfigProperties
   ) {
     this.loadReportsPort = loadReportsPort;
     this.saveReportsPort = saveReportsPort;
     this.accountReportManager = accountReportManager;
     this.reportStartDate = LocalDate
-        .parse(accountingConfigurationProperties.getReportStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        .parse(accountingConfigProperties.getReportStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
     String fileName =
         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HH-mm")) + "_report.csv";
-    this.reportFile = ServiceUtils.getValidPath(accountingConfigurationProperties.getImportPath())
+    this.reportFile = ServiceUtils.getValidPath(accountingConfigProperties.getImportPath())
         .getParent().resolve(Paths.get(fileName));
 
     DecimalFormatSymbols symbols = new DecimalFormatSymbols();

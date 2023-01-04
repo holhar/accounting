@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
 @ConfigurationProperties(prefix = "accounting")
-public class AccountingConfigurationProperties {
+public class AccountingConfigProperties {
 
   private String importPath;
 
